@@ -14,7 +14,6 @@ class AmalTemplate(Base, TimestampMixin):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID_PK, primary_key=True, default=uuid.uuid4)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
-    description: Mapped[str] = mapped_column(Text, nullable=False)
     reccuringRule: Mapped[ReccuringRule] = mapped_column(
         Enum(ReccuringRule, name="reccuring_rule_enum"), nullable=False
     )

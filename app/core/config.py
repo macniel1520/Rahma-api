@@ -16,26 +16,55 @@ class S3Settings(BaseModel):
         return f"https://{self.endpoint}/{self.bucket}"
 
 
-class DB(BaseModel):                                                                                   
-    port: int = 5432      
-    host: str                                                    
-    password: str                                                           
-    user: str                                                               
-    database: str                                                                 
+class DB(BaseModel):
+    port: int = 5432
+    host: str
+    password: str
+    user: str
+    database: str
 
-    @property                                                               
+    @property
     def root(self) -> str:
         return (
             f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}"
         )
 
-    @property                                                               
+    @property
     def uri(self) -> str:
         return f"{self.root}/{self.database}"
+
+
+class SMTP(BaseModel):
+    host: str
+    port: int
+    username: str
+    password: str
+    sender_email: str
+    use_tls: bool
+    start_tls: bool
+
+    # Email sending configuration
+    timeout: float = 15.0
+    retries: int = 3
+    base_backoff: float = 0.6
+
+
+class JWT(BaseModel):
+    secret: str
+    lifetime_seconds: int
+
+
+class UserToken(BaseModel):
+    secret: str
+    lifetime_seconds: int
+
 
 class Settings(BaseSettings):
     s3: S3Settings
     db: DB
+    smtp: SMTP
+    jwt: JWT
+    user_token: UserToken
 
     model_config = SettingsConfigDict(
         env_prefix="API_",

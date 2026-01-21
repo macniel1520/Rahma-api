@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Text, ForeignKey, Enum, BIGINT, URL
+from sqlalchemy import String, Text, ForeignKey, Enum, BIGINT
 from app.db.models.base import Base, TimestampMixin
 from app.db.models.enums import UUID_PK, Category
 from typing import TYPE_CHECKING
@@ -16,8 +16,8 @@ class Route(Base, TimestampMixin):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     views: Mapped[BIGINT] = mapped_column(BIGINT, nullable=False)
-    routeUrl: Mapped[URL] = mapped_column(URL, nullable=False)
-    
+    routeUrl: Mapped[str] = mapped_column(String(500), nullable=False)
+
     category: Mapped[Category] = mapped_column(
         Enum(Category, name="category_enum"), nullable=False
     )
