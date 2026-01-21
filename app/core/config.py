@@ -16,22 +16,23 @@ class S3Settings(BaseModel):
         return f"https://{self.endpoint}/{self.bucket}"
 
 
-class DB(BaseModel):                                                                                   
-    port: int = 5432      
-    host: str                                                    
-    password: str                                                           
-    user: str                                                               
-    database: str                                                                 
+class DB(BaseModel):
+    port: int = 5432
+    host: str
+    password: str
+    user: str
+    database: str
 
-    @property                                                               
+    @property
     def root(self) -> str:
         return (
             f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}"
         )
 
-    @property                                                               
+    @property
     def uri(self) -> str:
         return f"{self.root}/{self.database}"
+
 
 class Settings(BaseSettings):
     s3: S3Settings

@@ -17,7 +17,7 @@ class Route(Base, TimestampMixin):
     content: Mapped[str] = mapped_column(Text, nullable=False)
     views: Mapped[BIGINT] = mapped_column(BIGINT, nullable=False)
     routeUrl: Mapped[URL] = mapped_column(URL, nullable=False)
-    
+
     category: Mapped[Category] = mapped_column(
         Enum(Category, name="category_enum"), nullable=False
     )
