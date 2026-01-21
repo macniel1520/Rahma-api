@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
+
 from app.db.models.enums import Category
 from app.schemas.common.attribute_mixin import AttributeMixin
 from app.schemas.common.created_at_mixin import CreatedAtMixin
 from app.schemas.common.uuid_mixin import UUIDMixin
-from app.schemas.sabil.route_schema import RouteRead
+
+if TYPE_CHECKING:
+    from app.schemas.sabil.route_schema import RouteRead
 
 
 class CountryRead(AttributeMixin, UUIDMixin, CreatedAtMixin):
@@ -12,5 +16,5 @@ class CountryRead(AttributeMixin, UUIDMixin, CreatedAtMixin):
 
 
 class CountryDetailRead(CountryRead):
-    routes: list[RouteRead]
+    routes: list["RouteRead"]
     category: Category

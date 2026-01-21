@@ -28,4 +28,3 @@ class ReccuringRule(str, enum.Enum):
     WEEKLY = "weekly"
     MONTHLY = "monthly"
     YEARLY = "yearly"
-    YEARLY = "yearly"
