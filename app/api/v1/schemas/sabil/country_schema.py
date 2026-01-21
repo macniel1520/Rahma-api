@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING
 
+from app.api.v1.schemas.common.attrubute_mixin import AttributeMixin
+from app.api.v1.schemas.common.created_at_mixin import CreatedAtMixin
+from app.api.v1.schemas.common.uuid_mixin import UUIDMixin
 from app.db.models.enums import Category
-from app.schemas.common.attribute_mixin import AttributeMixin
-from app.schemas.common.created_at_mixin import CreatedAtMixin
-from app.schemas.common.uuid_mixin import UUIDMixin
 
 if TYPE_CHECKING:
-    from app.schemas.sabil.route_schema import RouteRead
+    from app.api.v1.schemas.sabil.route_schema import RouteRead
 
 
 class CountryRead(AttributeMixin, UUIDMixin, CreatedAtMixin):

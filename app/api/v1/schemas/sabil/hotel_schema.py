@@ -1,9 +1,9 @@
 from pydantic import URL, Field
 
-from app.schemas.common.attribute_mixin import AttributeMixin
-from app.schemas.common.created_at_mixin import CreatedAtMixin
-from app.schemas.common.uuid_mixin import UUIDMixin
-from app.schemas.sabil.location_schema import LocationRead
+from app.api.v1.schemas.common.attrubute_mixin import AttributeMixin
+from app.api.v1.schemas.common.created_at_mixin import CreatedAtMixin
+from app.api.v1.schemas.common.uuid_mixin import UUIDMixin
+from app.api.v1.schemas.sabil.location_schema import LocationRead
 
 
 class HotelRead(AttributeMixin, UUIDMixin, CreatedAtMixin):
