@@ -8,6 +8,7 @@ from app.core.config import settings
 
 log = logger.bind(module=__name__, service="s3")
 
+
 class AsyncMinioClient:
     def __init__(
         self,
