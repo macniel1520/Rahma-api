@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Text, ForeignKey, URL, Float, BIGINT
+from sqlalchemy import String, Text, ForeignKey, Float, BIGINT
 from app.db.models.base import Base, TimestampMixin
 from app.db.models.enums import UUID_PK
 from typing import TYPE_CHECKING
@@ -16,7 +16,7 @@ class Hotel(Base, TimestampMixin):
     id: Mapped[uuid.UUID] = mapped_column(UUID_PK, primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
-    photoUrl: Mapped[URL] = mapped_column(URL, nullable=False)
+    photoUrl: Mapped[str] = mapped_column(String(500), nullable=False)
     avgScore: Mapped[float] = mapped_column(Float, nullable=False)
     scoreCount: Mapped[BIGINT] = mapped_column(BIGINT, nullable=False)
     avgPrice: Mapped[float] = mapped_column(Float, nullable=False)

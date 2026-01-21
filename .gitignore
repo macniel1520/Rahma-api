@@ -153,4 +153,4 @@ cython_debug/
 
 .ruff_cache
 
-.cursor/
+.cursor
