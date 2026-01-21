@@ -1,6 +1,7 @@
 from fastapi import status
 from app.schemas.error import ErrorResponse
 
+
 def response_error(status_code: int, error: str, message: str):
     return {
         status_code: {
@@ -11,16 +12,14 @@ def response_error(status_code: int, error: str, message: str):
                     "examples": {
                         "default": {
                             "summary": message,
-                            "value": {
-                                "error": error,
-                                "detail": message
-                            }
+                            "value": {"error": error, "detail": message},
                         }
                     }
                 }
             },
         }
     }
+
 
 # invalid_group_id_response = response_error(
 #     status.HTTP_422_UNPROCESSABLE_ENTITY,
