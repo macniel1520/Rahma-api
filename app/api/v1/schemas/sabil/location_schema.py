@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from app.schemas.common.attribute_mixin import AttributeMixin
+from app.api.v1.schemas.common.attrubute_mixin import AttributeMixin
 
 
 class LocationRead(AttributeMixin):
