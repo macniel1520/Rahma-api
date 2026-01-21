@@ -2,7 +2,7 @@ import datetime
 from pydantic import EmailStr, Field
 
 from app.api.v1.schemas.common.attrubute_mixin import AttributeMixin
-from app.api.v1.schemas.common.uuid_minix import UUIDMixin
+from app.api.v1.schemas.common.uuid_mixin import UUIDMixin
 
 
 class UserRead(AttributeMixin, UUIDMixin):
