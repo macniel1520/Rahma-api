@@ -7,6 +7,10 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.db.models.country import Country
+    from app.db.models.route_image import RouteImage
+    from app.db.models.restaurant import Restaurant
+    from app.db.models.hotel import Hotel
+    from app.db.models.amal_template import AmalTemplate
 
 
 class Route(Base, TimestampMixin):
@@ -26,3 +30,9 @@ class Route(Base, TimestampMixin):
         UUID_PK, ForeignKey("country.id", ondelete="CASCADE"), nullable=False
     )
     country: Mapped["Country"] = relationship("Country", back_populates="routes")
+
+    # Back-references
+    route_images: Mapped[list["RouteImage"]] = relationship("RouteImage", back_populates="route")
+    restaurants: Mapped[list["Restaurant"]] = relationship("Restaurant", back_populates="route")
+    hotels: Mapped[list["Hotel"]] = relationship("Hotel", back_populates="route")
+    amal_templates: Mapped[list["AmalTemplate"]] = relationship("AmalTemplate", back_populates="route")

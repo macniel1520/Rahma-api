@@ -1,32 +1,25 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi_users import BaseUserManager
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.schemas.auth.session import RefreshIn, LogoutIn, TokenPairOut, LoginIn
 from app.api.v1.exceptions import invalid_credentials_exc, invalid_refresh_exc
 from app.db.engine import get_session
-from app.services.auth.login_service import login_with_email_password, InvalidCredentials
-from app.services.auth.refresh_service import rotate_refresh, revoke_refresh, InvalidRefresh
-from app.services.auth.user_manager import get_user_manager
-from app.db.models.user import User
-from uuid import UUID
+from app.services.auth.auth_service import login_with_email_password, InvalidCredentials
+from app.services.auth.tokens import rotate_refresh, revoke_refresh, InvalidRefresh
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-
 
 
 @router.post("/login", response_model=TokenPairOut)
 async def login(
     data: LoginIn,
     session: AsyncSession = Depends(get_session),
-    user_manager: BaseUserManager[User, UUID] = Depends(get_user_manager),
 ):
     try:
         tokens = await login_with_email_password(
             session=session,
-            user_manager=user_manager,
             email=str(data.email),
             password=data.password,
         )

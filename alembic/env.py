@@ -6,6 +6,7 @@ from asyncpg.exceptions import CannotConnectNowError
 
 from app.db.engine import engine
 from app.db.models.base import Base
+import app.db.models  # noqa: F401
 from sqlalchemy.ext.asyncio import AsyncConnection
 from alembic import context
 from app.core.config import settings

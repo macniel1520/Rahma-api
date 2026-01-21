@@ -53,6 +53,8 @@ class JWT(BaseModel):
     secret: str
     lifetime_seconds: int
 
+class RefreshToken(BaseModel):
+    lifetime_seconds: int
 
 class UserToken(BaseModel):
     secret: str
@@ -65,6 +67,7 @@ class Settings(BaseSettings):
     smtp: SMTP
     jwt: JWT
     user_token: UserToken
+    refresh_token: RefreshToken
 
     model_config = SettingsConfigDict(
         env_prefix="API_",

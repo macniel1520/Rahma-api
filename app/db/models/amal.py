@@ -1,15 +1,16 @@
 import uuid
+import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, Date, Time, String, Enum
 from app.db.models.base import Base, TimestampMixin
 from app.db.models.enums import UUID_PK, ReccuringRule
 from typing import TYPE_CHECKING
-import datetime
 
 if TYPE_CHECKING:
     from app.db.models.user import User
     from app.db.models.amal_category import AmalCategory
     from app.db.models.icon import Icon
+
 
 
 class Amal(Base, TimestampMixin):
@@ -37,6 +38,4 @@ class Amal(Base, TimestampMixin):
 
     icon: Mapped["Icon"] = relationship("Icon", back_populates="amals")
     user: Mapped["User"] = relationship("User", back_populates="amals")
-    category: Mapped["AmalCategory"] = relationship(
-        "AmalCategory", back_populates="amals"
-    )
+    amal_category: Mapped["AmalCategory"] = relationship("AmalCategory", back_populates="amals")
