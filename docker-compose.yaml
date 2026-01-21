@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:17
+    container_name: db
+    environment:
+      POSTGRES_USER: ${API_DB__USER}
+      POSTGRES_PASSWORD: ${API_DB__PASSWORD}
+      POSTGRES_DB: ${API_DB__DATABASE}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $API_DB__USER -d $API_DB__DATABASE"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend-api-rahma
+    ports:
+      - "${API_PORT:-8000}:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      alembic:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  alembic:
+    image: alembic-rahma
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["alembic", "upgrade", "head"]
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+    volumes:
+      - ./alembic:/app/alembic

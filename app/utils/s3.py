@@ -73,9 +73,9 @@ class AsyncMinioClient:
 
 
 minio_client = AsyncMinioClient(
-    endpoint=settings.s3.s3_endpoint,
-    access_key=settings.s3.s3_access_key,
-    secret_key=settings.s3.s3_secret_key,
-    secure=settings.s3.s3_secure,
-    bucket=settings.s3.s3_bucket,
+    endpoint=settings.s3.endpoint,
+    access_key=settings.s3.access_key,
+    secret_key=settings.s3.secret_key,
+    secure=settings.s3.secure,
+    bucket=settings.s3.bucket,
 )

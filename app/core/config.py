@@ -5,19 +5,37 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class S3Settings(BaseModel):
-    s3_endpoint: str
-    s3_access_key: str
-    s3_secret_key: str
-    s3_bucket: str
-    s3_secure: bool = False
+    endpoint: str
+    access_key: str
+    secret_key: str
+    bucket: str
+    secure: bool = False
 
     @property
     def url(self) -> str:
-        return f"https://{self.s3_endpoint}/{self.s3_bucket}"
+        return f"https://{self.endpoint}/{self.bucket}"
 
+
+class DB(BaseModel):                                                                                   
+    port: int = 5432      
+    host: str                                                    
+    password: str                                                           
+    user: str                                                               
+    database: str                                                                 
+
+    @property                                                               
+    def root(self) -> str:
+        return (
+            f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}"
+        )
+
+    @property                                                               
+    def uri(self) -> str:
+        return f"{self.root}/{self.database}"
 
 class Settings(BaseSettings):
     s3: S3Settings
+    db: DB
 
     model_config = SettingsConfigDict(
         env_prefix="API_",
