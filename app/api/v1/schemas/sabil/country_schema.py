@@ -9,10 +9,10 @@ if TYPE_CHECKING:
     from app.api.v1.schemas.sabil.route_schema import RouteRead
 
 
-class CountryRead(AttributeMixin, UUIDMixin, CreatedAtMixin):
+class CountryRead(UUIDMixin, AttributeMixin, CreatedAtMixin):
     name: str
     photoUrl: str
-    routesCount: int
+    routesCount: int | None = None
 
 
 class CountryDetailRead(CountryRead):

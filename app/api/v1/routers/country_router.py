@@ -1,11 +1,11 @@
 import uuid
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Path, Query
 
+from app.api.v1.schemas.common.limit_offset_wrapper import LimitOffsetWrapper
+from app.api.v1.schemas.sabil.country_schema import CountryRead
 from app.db.cruds.country_repository import MockCountryRepository
-from app.db.services.country.country_service import CountryService
-from app.schemas.common.limit_offset_wrapper import LimitOffsetWrapper
-from app.schemas.sabil.country_schema import CountryRead
+from app.services.country.country_service import CountryService
 
 router = APIRouter(prefix="/countries", tags=["countries"])
 
@@ -25,7 +25,7 @@ async def get_countries(
 
 @router.get("/{country_id}", response_model=CountryRead)
 async def get_country(
-    country_id: uuid.UUID = Query(..., description="The ID of the country"),
+    country_id: uuid.UUID = Path(..., description="The ID of the country"),
     service: CountryService = Depends(get_country_service),
 ) -> CountryRead:
     return await service.get(country_id=country_id)
