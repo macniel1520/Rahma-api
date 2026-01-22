@@ -4,7 +4,10 @@ import uuid
 from pydantic import BaseModel
 
 from app.api.v1.schemas.amal.amal_category_schema import AmalCategoryRead
-from app.api.v1.schemas.amal.amal_completion_schema import AmalCompletionRead, AmalCompletionCreate
+from app.api.v1.schemas.amal.amal_completion_schema import (
+    AmalCompletionRead,
+    AmalCompletionCreate,
+)
 from app.api.v1.schemas.amal.icon_schema import IconRead
 from app.api.v1.schemas.common.attrubute_mixin import AttributeMixin
 from app.api.v1.schemas.common.created_at_mixin import CreatedAtMixin

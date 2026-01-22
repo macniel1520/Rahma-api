@@ -37,22 +37,21 @@ SEED_MARKER_USER_EMAIL = "seed@seed.com"
 SEED_MARKER_ICON = "SEED__ICON__"
 SEED_MARKER_CATEGORY = "SEED__CATEGORY__"
 
+
 async def purge_seeded(session: AsyncSession) -> None:
-    # Purge seeded amal data
     seeded_user = await session.scalar(
         select(User).where(User.email == SEED_MARKER_USER_EMAIL)
     )
     if seeded_user:
-        # Delete completions first (they also cascade, but be explicit)
-        await session.execute(delete(AmalCompletion).where(AmalCompletion.userId == seeded_user.id))
+        await session.execute(
+            delete(AmalCompletion).where(AmalCompletion.userId == seeded_user.id)
+        )
         await session.execute(delete(Amal).where(Amal.userId == seeded_user.id))
 
     await session.execute(
         delete(AmalCategory).where(AmalCategory.name.like(f"{SEED_MARKER_CATEGORY}%"))
     )
-    await session.execute(
-        delete(Icon).where(Icon.url.like(f"{SEED_MARKER_ICON}%"))
-    )
+    await session.execute(delete(Icon).where(Icon.url.like(f"{SEED_MARKER_ICON}%")))
 
     # Purge seeded sabil data
     seeded_countries = (
@@ -90,7 +89,9 @@ async def purge_seeded(session: AsyncSession) -> None:
                 )
             )
         )
-        await session.execute(delete(Route).where(Route.countryId.in_(seeded_countries)))
+        await session.execute(
+            delete(Route).where(Route.countryId.in_(seeded_countries))
+        )
         await session.execute(delete(Country).where(Country.id.in_(seeded_countries)))
 
     await session.commit()
@@ -142,13 +143,10 @@ async def seed(session: AsyncSession) -> None:
                 session.add(AmalTemplateFactory.build(route=r))
 
     await session.commit()
-
-    # Seed amal data
     await seed_amals(session)
 
 
 async def seed_amals(session: AsyncSession) -> None:
-    # Get or create seed user
     seed_user = await session.scalar(
         select(User).where(User.email == SEED_MARKER_USER_EMAIL)
     )
@@ -163,7 +161,6 @@ async def seed_amals(session: AsyncSession) -> None:
         session.add(seed_user)
         await session.flush()
 
-    # Create icons
     icons = []
     for i in range(5):
         icon = IconFactory.build(url=f"{SEED_MARKER_ICON}{i + 1}")
@@ -172,7 +169,6 @@ async def seed_amals(session: AsyncSession) -> None:
 
     await session.flush()
 
-    # Create categories
     category_names = ["Намаз", "Дуа", "Зикр", "Чтение Корана", "Садака"]
     categories = []
     for name in category_names:
@@ -182,7 +178,6 @@ async def seed_amals(session: AsyncSession) -> None:
 
     await session.flush()
 
-    # Create amals for seed user
     amals = []
     for _ in range(random.randint(5, 10)):
         amal = AmalFactory.build(
@@ -195,15 +190,16 @@ async def seed_amals(session: AsyncSession) -> None:
 
     await session.flush()
 
-    # Create completions for some amals (last 7 days)
     for amal in amals:
-        # Create 0-5 completions per amal for different days
         for days_ago in range(random.randint(0, 5)):
-            if random.random() > 0.4:  # 60% chance of completion
-                completion_date = datetime.date.today() - datetime.timedelta(days=days_ago)
+            if random.random() > 0.4:
+                completion_date = datetime.date.today() - datetime.timedelta(
+                    days=days_ago
+                )
                 completion = AmalCompletionFactory.build(
                     date=completion_date,
-                    completedAt=datetime.datetime.now() - datetime.timedelta(days=days_ago),
+                    completedAt=datetime.datetime.now()
+                    - datetime.timedelta(days=days_ago),
                 )
                 completion.amalId = amal.id
                 completion.userId = seed_user.id

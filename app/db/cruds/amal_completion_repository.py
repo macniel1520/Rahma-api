@@ -14,9 +14,15 @@ from app.db.models.amal_completion import AmalCompletion
 @runtime_checkable
 class AmalCompletionRepository(Protocol):
     async def get_all_by_user(self, *, user_id: UUID) -> Sequence[AmalCompletion]: ...
-    async def get_by_ids(self, *, completion_ids: list[UUID]) -> Sequence[AmalCompletion]: ...
-    async def upsert_many(self, *, completions: list[dict], user_id: UUID) -> Sequence[AmalCompletion]: ...
-    async def delete_by_ids(self, *, user_id: UUID, completion_ids: list[UUID]) -> int: ...
+    async def get_by_ids(
+        self, *, completion_ids: list[UUID]
+    ) -> Sequence[AmalCompletion]: ...
+    async def upsert_many(
+        self, *, completions: list[dict], user_id: UUID
+    ) -> Sequence[AmalCompletion]: ...
+    async def delete_by_ids(
+        self, *, user_id: UUID, completion_ids: list[UUID]
+    ) -> int: ...
 
 
 class SqlAlchemyAmalCompletionRepository:
@@ -39,7 +45,9 @@ class SqlAlchemyAmalCompletionRepository:
         result = await self._session.scalars(stmt)
         return list(result.all())
 
-    async def upsert_many(self, *, completions: list[dict], user_id: UUID) -> list[AmalCompletion]:
+    async def upsert_many(
+        self, *, completions: list[dict], user_id: UUID
+    ) -> list[AmalCompletion]:
         if not completions:
             return []
 
@@ -51,9 +59,7 @@ class SqlAlchemyAmalCompletionRepository:
         valid_amal_ids = set(valid_amal_ids_result.all())
 
         # Filter out completions for amals that don't belong to user
-        valid_completions = [
-            c for c in completions if c["amalId"] in valid_amal_ids
-        ]
+        valid_completions = [c for c in completions if c["amalId"] in valid_amal_ids]
 
         if not valid_completions:
             return []

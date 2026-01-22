@@ -8,8 +8,6 @@ from alembic import context
 from app.core.config import settings
 from app.db.engine import engine
 from app.db.models.base import Base
-from alembic import context
-from app.core.config import settings
 
 config = context.config
 

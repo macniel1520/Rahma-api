@@ -161,9 +161,12 @@ class AmalCompletionFactory(factory.Factory):
         model = AmalCompletion
 
     id = factory.LazyFunction(uuid.uuid4)
-    date = factory.LazyFunction(lambda: datetime.date.today() - datetime.timedelta(days=random.randint(0, 7)))
+    date = factory.LazyFunction(
+        lambda: datetime.date.today() - datetime.timedelta(days=random.randint(0, 7))
+    )
     completedAt = factory.LazyFunction(
-        lambda: datetime.datetime.now() - datetime.timedelta(
+        lambda: datetime.datetime.now()
+        - datetime.timedelta(
             days=random.randint(0, 7),
             hours=random.randint(0, 23),
             minutes=random.randint(0, 59),

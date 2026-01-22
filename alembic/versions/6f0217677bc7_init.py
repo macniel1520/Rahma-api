@@ -1,20 +1,20 @@
 """init
 
-Revision ID: 922457440bf7
+Revision ID: 6f0217677bc7
 Revises:
-Create Date: 2026-01-22 13:11:58.141442
+Create Date: 2026-01-22 16:55:02.923555
 
 """
 
 from typing import Sequence, Union
 
+from alembic import op
 import sqlalchemy as sa
 import sqlalchemy_utils
 
-from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "922457440bf7"
+revision: str = "6f0217677bc7"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -286,6 +286,30 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
+        "amal_completion",
+        sa.Column("id", sa.UUID(), nullable=False),
+        sa.Column("amalId", sa.UUID(), nullable=False),
+        sa.Column("userId", sa.UUID(), nullable=False),
+        sa.Column("date", sa.Date(), nullable=False),
+        sa.Column("completedAt", sa.DateTime(), nullable=False),
+        sa.Column(
+            "createdAt",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
+        sa.Column(
+            "updatedAt",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
+        sa.ForeignKeyConstraint(["amalId"], ["amal.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(["userId"], ["user.id"], ondelete="CASCADE"),
+        sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("amalId", "date", name="uq_amal_completion_amal_date"),
+    )
+    op.create_table(
         "amal_template",
         sa.Column("id", sa.UUID(), nullable=False),
         sa.Column("title", sa.String(length=255), nullable=False),
@@ -403,6 +427,7 @@ def downgrade() -> None:
     op.drop_table("restaurant")
     op.drop_table("hotel")
     op.drop_table("amal_template")
+    op.drop_table("amal_completion")
     op.drop_table("route")
     op.drop_index(op.f("ix_refresh_token_userId"), table_name="refresh_token")
     op.drop_table("refresh_token")

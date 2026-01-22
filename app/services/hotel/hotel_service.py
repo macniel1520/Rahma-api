@@ -8,7 +8,9 @@ from app.db.cruds.route_repository import RouteRepository
 
 
 class HotelService:
-    def __init__(self, repo: HotelRepository, route_repo: RouteRepository | None = None):
+    def __init__(
+        self, repo: HotelRepository, route_repo: RouteRepository | None = None
+    ):
         self._repo = repo
         self._route_repo = route_repo
 
