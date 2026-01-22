@@ -26,6 +26,21 @@ class RouteService:
             country_id=country_id, category=category
         )
 
+        # Populate routesCount for each country's routes
+        country_ids = {route.country.id for route in routes if route.country}
+        if country_ids:
+            from app.db.cruds.country_repository import SqlAlchemyCountryRepository
+            country_repo = SqlAlchemyCountryRepository(self._repo._session)
+            routes_counts = await country_repo.get_routes_counts(country_ids=list(country_ids))
+
+            # Create a mapping of country_id -> routes_count
+            routes_count_map = {country_id: count for country_id, count in routes_counts}
+
+            # Set routesCount on each country
+            for route in routes:
+                if route.country and route.country.id in routes_count_map:
+                    route.country.routesCount = routes_count_map[route.country.id]
+
         return LimitOffsetWrapper(
             count=total_count,
             items=[RouteRead.model_validate(route) for route in routes],
