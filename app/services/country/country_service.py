@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from app.api.v1.exceptions import resource_not_found_exc
 from app.api.v1.schemas.common.limit_offset_wrapper import LimitOffsetWrapper
 from app.api.v1.schemas.sabil.country_schema import CountryRead
 from app.db.cruds.country_repository import CountryRepository
@@ -22,5 +23,8 @@ class CountryService:
 
     async def get(self, *, country_id: UUID) -> CountryRead:
         country = await self._repo.get_by_id(country_id=country_id)
+
+        if country is None:
+            raise resource_not_found_exc("Country", str(country_id))
 
         return CountryRead.model_validate(country)

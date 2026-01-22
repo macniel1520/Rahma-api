@@ -71,3 +71,13 @@ def email_taken_exc() -> HTTPException:
         status_code=status.HTTP_400_BAD_REQUEST,
         detail={"error": "email_taken", "message": "Email already registered."},
     )
+
+
+def resource_not_found_exc(resource_type: str, resource_id: str) -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail={
+            "error": "resource_not_found",
+            "message": f"{resource_type} with id {resource_id} not found.",
+        },
+    )

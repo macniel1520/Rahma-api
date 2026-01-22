@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from app.api.v1.exceptions import resource_not_found_exc
 from app.api.v1.schemas.common.limit_offset_wrapper import LimitOffsetWrapper
 from app.api.v1.schemas.sabil.route_schema import RouteDetailRead, RouteRead
 from app.db.cruds.route_repository import RouteRepository
@@ -33,13 +34,16 @@ class RouteService:
     async def get(self, *, route_id: UUID) -> RouteRead:
         route = await self._repo.get_by_id(route_id=route_id)
 
+        if route is None:
+            raise resource_not_found_exc("Route", str(route_id))
+
         return RouteRead.model_validate(route)
 
     async def get_detail(self, *, route_id: UUID) -> RouteDetailRead:
         route = await self._repo.get_by_id_detailed(route_id=route_id)
 
         if route is None:
-            raise ValueError(f"Route with id {route_id} not found")
+            raise resource_not_found_exc("Route", str(route_id))
 
         hotels_count = await self._repo.get_hotels_count(route_id=route_id)
         restaurants_count = await self._repo.get_restaurants_count(route_id=route_id)

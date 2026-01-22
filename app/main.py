@@ -2,14 +2,39 @@ from fastapi import FastAPI
 
 from app.core.middleware import setup_middlewares
 from app.core.router import setup_routes
-from app.utils.structlog_config import setup_logging
+from app.docs.openapi import (
+    APP_DESCRIPTION,
+    APP_NAME,
+    APP_VERSION,
+    SERVERS,
+    TAGS_METADATA,
+)
 from app.docs.scalar import setup_scalar
+from app.utils.structlog_config import setup_logging
 
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="Rahma API",
-        version="1.0.0",
+        title=APP_NAME,
+        version=APP_VERSION,
+        description=APP_DESCRIPTION,
+        openapi_tags=TAGS_METADATA,
+        docs_url="/docs",
+        redoc_url="/redoc",
+        servers=SERVERS,
+        separate_input_output_schemas=True,
+        swagger_ui_parameters={
+            "persistAuthorization": True,
+            "displayRequestDuration": True,
+            "filter": True,
+            "tryItOutEnabled": True,
+            "docExpansion": "none",
+            "defaultModelsExpandDepth": 2,
+            "defaultModelExpandDepth": 2,
+            "deepLinking": True,
+            "syntaxHighlight": {"theme": "obsidian"},
+        },
+        generate_unique_id_function=lambda route: route.name,
     )
 
     setup_logging()
