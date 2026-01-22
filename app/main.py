@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from app.admin.admin import create_admin_app
 from app.core.middleware import setup_middlewares
 from app.core.router import setup_routes
 from app.docs.openapi import (
@@ -41,6 +42,7 @@ def create_app() -> FastAPI:
     setup_middlewares(app)
     setup_routes(app)
     setup_scalar(app)
+    create_admin_app(app)
 
     return app
 

@@ -6,6 +6,7 @@ APP_DESCRIPTION = """
 
 Ваш путь к Святым местам — **с заботой, верой и технологиями**.
 
+[Админка](https://rahma.facex.pro/admin)
 [Контакты](https://t.me/macniel3)
 [Компания](https://facex.pro)
 [Репозиторий](https://github.com/FaceX-geo/rahma-api)
