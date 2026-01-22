@@ -2,8 +2,13 @@ from pydantic import BaseModel, Field
 
 
 class ErrorDetail(BaseModel):
-    error: str = Field(..., description="Error code")
-    message: str = Field(..., description="Human-readable error message")
+    error: str = Field(..., description="Error code", example="resource_not_found")
+    message: str = Field(
+        ...,
+        title="Сообщение об ошибке",
+        description="Человеко-читаемое сообщение об ошибке",
+        example="Route with id 123e4567-e89b-12d3-a456-426614174000 not found.",
+    )
 
 
 class ErrorResponse(BaseModel):

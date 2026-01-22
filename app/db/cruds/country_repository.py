@@ -16,6 +16,7 @@ class CountryRepository(Protocol):
     async def get_list(self, *, limit: int, offset: int) -> Sequence[Country]: ...
     async def get_by_id(self, *, country_id: UUID) -> Country | None: ...
     async def get_routes_count(self, *, country_id: UUID) -> int: ...
+    async def get_routes_counts(self, *, country_ids: list[UUID]) -> list[tuple[UUID, int]]: ...
     async def get_list_with_routes_count(
         self, *, limit: int, offset: int
     ) -> Sequence[Country]: ...
@@ -81,6 +82,15 @@ class MockCountryRepository:
             UUID("f1e71c81-b4e2-433e-9571-60186a9728d8"): 2,  # France
         }
         return mock_route_counts.get(country_id, 0)
+
+    async def get_routes_counts(self, *, country_ids: list[UUID]) -> list[tuple[UUID, int]]:
+        # Mock route counts for each country
+        mock_route_counts = {
+            UUID("b9d6c522-2e4a-4a5d-9e5f-05410d7e13e9"): 5,  # Turkey
+            UUID("1e43fadd-1345-4413-b83d-1662b0ba47e8"): 3,  # Germany
+            UUID("f1e71c81-b4e2-433e-9571-60186a9728d8"): 2,  # France
+        }
+        return [(country_id, mock_route_counts.get(country_id, 0)) for country_id in country_ids]
 
     async def get_list_with_routes_count(
         self, *, limit: int, offset: int
@@ -150,6 +160,19 @@ class SqlAlchemyCountryRepository:
         stmt = select(func.count(Route.id)).where(Route.countryId == country_id)
         result = await self._session.scalar(stmt)
         return result or 0
+
+    async def get_routes_counts(self, *, country_ids: list[UUID]) -> list[tuple[UUID, int]]:
+        if not country_ids:
+            return []
+
+        stmt = (
+            select(Route.countryId, func.count(Route.id).label("routes_count"))
+            .where(Route.countryId.in_(country_ids))
+            .group_by(Route.countryId)
+        )
+
+        result = await self._session.execute(stmt)
+        return [(row.countryId, row.routes_count) for row in result.all()]
 
     async def get_list_with_routes_count(
         self, *, limit: int, offset: int
