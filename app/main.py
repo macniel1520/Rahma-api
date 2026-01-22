@@ -1,7 +1,8 @@
-from app.utils.structlog_config import setup_logging
+from fastapi import FastAPI
+
 from app.core.middleware import setup_middlewares
 from app.core.router import setup_routes
-from fastapi import FastAPI
+from app.utils.structlog_config import setup_logging
 
 
 def create_app() -> FastAPI:

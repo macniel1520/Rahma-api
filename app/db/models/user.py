@@ -1,12 +1,19 @@
-import uuid
 import datetime
+import uuid
+from typing import TYPE_CHECKING
+
+from sqlalchemy import Boolean, Date, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship, synonym
 from sqlalchemy_utils import EmailType
-from sqlalchemy.orm import Mapped, mapped_column, synonym
-from sqlalchemy import String, Boolean, Date
 
 from app.core.config import settings
-from app.db.models.enums import UUID_PK
 from app.db.models.base import Base, TimestampMixin
+from app.db.models.enums import UUID_PK
+
+if TYPE_CHECKING:
+    from app.db.models.amal import Amal
+    from app.db.models.email_verification import EmailVerification
+    from app.db.models.message import Message
 
 
 class User(Base, TimestampMixin):
@@ -32,3 +39,9 @@ class User(Base, TimestampMixin):
     is_verified = synonym("isVerified")
     is_active = synonym("isActive")
     is_superuser = synonym("isSuperuser")
+
+    amals: Mapped[list["Amal"]] = relationship("Amal", back_populates="user")
+    messages: Mapped[list["Message"]] = relationship("Message", back_populates="user")
+    email_verifications: Mapped[list["EmailVerification"]] = relationship(
+        "EmailVerification", back_populates="user"
+    )
