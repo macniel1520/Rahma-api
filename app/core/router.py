@@ -1,5 +1,6 @@
 from fastapi import APIRouter, FastAPI
 
+from app.api.v1.routers.amal_router import router as amal_router
 from app.api.v1.routers.user.auth import router as auth_router
 from app.api.v1.routers.user.users import router as users_router
 from app.api.v1.routers.user.session import router as session_router
@@ -11,6 +12,7 @@ def setup_routes(app: FastAPI) -> None:
     api_router = APIRouter(
         prefix="/api/v1",
     )
+    api_router.include_router(amal_router)
     api_router.include_router(auth_router)
     api_router.include_router(users_router)
     api_router.include_router(session_router)

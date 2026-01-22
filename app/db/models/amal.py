@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from app.db.models.user import User
     from app.db.models.amal_category import AmalCategory
+    from app.db.models.amal_completion import AmalCompletion
     from app.db.models.icon import Icon
 
 
@@ -39,4 +40,7 @@ class Amal(Base, TimestampMixin):
     user: Mapped["User"] = relationship("User", back_populates="amals")
     category: Mapped["AmalCategory"] = relationship(
         "AmalCategory", back_populates="amals"
+    )
+    completions: Mapped[list["AmalCompletion"]] = relationship(
+        "AmalCompletion", back_populates="amal", cascade="all, delete-orphan"
     )

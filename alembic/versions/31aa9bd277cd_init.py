@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 4bdb82f48fac
+Revision ID: 31aa9bd277cd
 Revises: 
-Create Date: 2026-01-22 13:54:06.625942
+Create Date: 2026-01-22 16:16:11.620489
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlalchemy_utils
 
 
 # revision identifiers, used by Alembic.
-revision: str = '4bdb82f48fac'
+revision: str = '31aa9bd277cd'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -114,6 +114,19 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['userId'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('refresh_token',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('userId', sa.UUID(), nullable=False),
+    sa.Column('tokenHash', sa.String(length=64), nullable=False),
+    sa.Column('expiresAt', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('revokedAt', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('createdAt', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updatedAt', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['userId'], ['user.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('tokenHash')
+    )
+    op.create_index(op.f('ix_refresh_token_userId'), 'refresh_token', ['userId'], unique=False)
     op.create_table('route',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
@@ -126,6 +139,19 @@ def upgrade() -> None:
     sa.Column('updatedAt', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['countryId'], ['country.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('amal_completion',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('amalId', sa.UUID(), nullable=False),
+    sa.Column('userId', sa.UUID(), nullable=False),
+    sa.Column('date', sa.Date(), nullable=False),
+    sa.Column('completedAt', sa.DateTime(), nullable=False),
+    sa.Column('createdAt', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updatedAt', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['amalId'], ['amal.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['userId'], ['user.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('amalId', 'date', name='uq_amal_completion_amal_date')
     )
     op.create_table('amal_template',
     sa.Column('id', sa.UUID(), nullable=False),
@@ -186,7 +212,10 @@ def downgrade() -> None:
     op.drop_table('restaurant')
     op.drop_table('hotel')
     op.drop_table('amal_template')
+    op.drop_table('amal_completion')
     op.drop_table('route')
+    op.drop_index(op.f('ix_refresh_token_userId'), table_name='refresh_token')
+    op.drop_table('refresh_token')
     op.drop_table('password_reset_code')
     op.drop_table('message')
     op.drop_table('email_verification')

@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from app.db.models.message import Message
     from app.db.models.email_verification import EmailVerification
     from app.db.models.amal import Amal
+    from app.db.models.amal_completion import AmalCompletion
     from app.db.models.password_reset_code import PasswordResetCode
 
 
@@ -50,3 +51,6 @@ class User(Base, TimestampMixin):
         back_populates="user",
     )
     amals: Mapped[list["Amal"]] = relationship("Amal", back_populates="user")
+    amal_completions: Mapped[list["AmalCompletion"]] = relationship(
+        "AmalCompletion", back_populates="user"
+    )
