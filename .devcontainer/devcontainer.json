@@ -13,10 +13,6 @@
       "onAutoForward": "silent"
     }
   },
-  "containerEnv": {
-    "PYTHONUNBUFFERED": "1",
-    "PYTHONDONTWRITEBYTECODE": "1"
-  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -35,6 +31,10 @@
     }
   ],
   "containerEnv": {
+    "PYTHONUNBUFFERED": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "WATCHFILES_FORCE_POLLING": "true",
+    "WATCHFILES_POLL_DELAY_MS": "500",
     "DOCKER_HOST": "unix:///var/run/docker-host.sock"
   },
   "features": {
