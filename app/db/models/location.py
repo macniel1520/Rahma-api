@@ -17,5 +17,4 @@ class Location(Base, TimestampMixin):
     lat: Mapped[str] = mapped_column(String(255), nullable=False)
     lng: Mapped[str] = mapped_column(String(255), nullable=False)
 
-    # Back-references
     hotels: Mapped[list["Hotel"]] = relationship("Hotel", back_populates="location")

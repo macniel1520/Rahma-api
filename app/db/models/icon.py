@@ -16,5 +16,4 @@ class Icon(Base, TimestampMixin):
     id: Mapped[uuid.UUID] = mapped_column(UUID_PK, primary_key=True, default=uuid.uuid4)
     url: Mapped[str] = mapped_column(String(500), nullable=False)
 
-    # Back-references
     amals: Mapped[list["Amal"]] = relationship("Amal", back_populates="icon")

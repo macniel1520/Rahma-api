@@ -54,7 +54,9 @@ def issue_access_token(user: User) -> str:
 
 
 def _refresh_expires_at() -> dt.datetime:
-    return now_utc() + dt.timedelta(seconds=int(settings.refresh_token.lifetime_seconds))
+    return now_utc() + dt.timedelta(
+        seconds=int(settings.refresh_token.lifetime_seconds)
+    )
 
 
 def _refresh_bytes() -> int:

@@ -24,5 +24,9 @@ class RefreshToken(Base, TimestampMixin):
 
     tokenHash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
 
-    expiresAt: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    revokedAt: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    expiresAt: Mapped[dt.datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False
+    )
+    revokedAt: Mapped[dt.datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )

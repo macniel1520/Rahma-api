@@ -6,7 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models.refresh import RefreshToken
 
 
-async def get_by_token_hash(session: AsyncSession, token_hash: str) -> RefreshToken | None:
+async def get_by_token_hash(
+    session: AsyncSession, token_hash: str
+) -> RefreshToken | None:
     res = await session.execute(
         select(RefreshToken).where(RefreshToken.tokenHash == token_hash)
     )
@@ -19,7 +21,9 @@ async def create(session: AsyncSession, rt: RefreshToken) -> RefreshToken:
     return rt
 
 
-async def revoke_by_token_hash(session: AsyncSession, token_hash: str, revoked_at) -> None:
+async def revoke_by_token_hash(
+    session: AsyncSession, token_hash: str, revoked_at
+) -> None:
     await session.execute(
         update(RefreshToken)
         .where(RefreshToken.tokenHash == token_hash, RefreshToken.revokedAt.is_(None))

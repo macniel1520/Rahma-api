@@ -16,4 +16,3 @@ class UserRead(AttributeMixin, UUIDMixin):
     gender: str | None = None
     country: str | None = None
     avatarUrl: str | None = None
-

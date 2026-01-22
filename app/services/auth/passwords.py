@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from passlib.context import CryptContext
 
-_pwd_context = CryptContext(schemes=["pbkdf2_sha256", "bcrypt_sha256"], deprecated="auto")
+_pwd_context = CryptContext(
+    schemes=["pbkdf2_sha256", "bcrypt_sha256"], deprecated="auto"
+)
 
 
 def hash_password(password: str) -> str:

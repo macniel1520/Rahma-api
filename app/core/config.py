@@ -53,8 +53,10 @@ class JWT(BaseModel):
     secret: str
     lifetime_seconds: int
 
+
 class RefreshToken(BaseModel):
     lifetime_seconds: int
+
 
 class UserToken(BaseModel):
     secret: str

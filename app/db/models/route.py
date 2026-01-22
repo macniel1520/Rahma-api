@@ -31,8 +31,13 @@ class Route(Base, TimestampMixin):
     )
     country: Mapped["Country"] = relationship("Country", back_populates="routes")
 
-    # Back-references
-    route_images: Mapped[list["RouteImage"]] = relationship("RouteImage", back_populates="route")
-    restaurants: Mapped[list["Restaurant"]] = relationship("Restaurant", back_populates="route")
+    route_images: Mapped[list["RouteImage"]] = relationship(
+        "RouteImage", back_populates="route"
+    )
+    restaurants: Mapped[list["Restaurant"]] = relationship(
+        "Restaurant", back_populates="route"
+    )
     hotels: Mapped[list["Hotel"]] = relationship("Hotel", back_populates="route")
-    amal_templates: Mapped[list["AmalTemplate"]] = relationship("AmalTemplate", back_populates="route")
+    amal_templates: Mapped[list["AmalTemplate"]] = relationship(
+        "AmalTemplate", back_populates="route"
+    )

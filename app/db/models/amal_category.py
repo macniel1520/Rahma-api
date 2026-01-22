@@ -10,12 +10,10 @@ if TYPE_CHECKING:
     from app.db.models.amal import Amal
 
 
-
 class AmalCategory(Base, TimestampMixin):
     __tablename__ = "amal_category"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID_PK, primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
 
-    # Back-references
     amals: Mapped[list["Amal"]] = relationship("Amal", back_populates="amal_category")

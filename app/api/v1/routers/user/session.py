@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.schemas.auth.session import RefreshIn, LogoutIn, TokenPairOut, LoginIn
@@ -8,11 +8,18 @@ from app.api.v1.exceptions import invalid_credentials_exc, invalid_refresh_exc
 from app.db.engine import get_session
 from app.services.auth.auth_service import login_with_email_password, InvalidCredentials
 from app.services.auth.tokens import rotate_refresh, revoke_refresh, InvalidRefresh
+from app.docs.responses import invalid_credentials_response, invalid_refresh_response
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/login", response_model=TokenPairOut)
+@router.post(
+    "/login",
+    response_model=TokenPairOut,
+    responses={
+        **invalid_credentials_response,  # noqa F405
+    },
+)
 async def login(
     data: LoginIn,
     session: AsyncSession = Depends(get_session),
@@ -27,7 +34,14 @@ async def login(
     except InvalidCredentials:
         raise invalid_credentials_exc()
 
-@router.post("/refresh", response_model=TokenPairOut)
+
+@router.post(
+    "/refresh",
+    response_model=TokenPairOut,
+    responses={
+        **invalid_refresh_response,  # noqa F405
+    },
+)
 async def refresh(
     data: RefreshIn,
     session: AsyncSession = Depends(get_session),
@@ -40,6 +54,7 @@ async def refresh(
         )
     except InvalidRefresh:
         raise invalid_refresh_exc()
+
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
 async def logout(

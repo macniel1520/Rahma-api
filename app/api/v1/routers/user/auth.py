@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.v1.schemas.auth.password_reset import (
     RequestResetCodeIn,
@@ -22,11 +22,27 @@ from app.services.auth.auth_service import (
     request_reset_code as request_reset_code_service,
     reset_password as reset_password_service,
 )
+from app.api.v1 import exceptions
+from app.docs.responses import (
+    invalid_email_taken_response,
+    verification_failed_response,
+    verification_expired_response,
+    password_mismatch_response,
+    reset_failed_invalid_code_response,
+    reset_failed_code_expired_response,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/register", response_model=UserRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/register",
+    response_model=UserRead,
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        **invalid_email_taken_response,  # noqa F405
+    },
+)
 async def register(
     data: RegisterIn,
     session: AsyncSession = Depends(get_session),
@@ -43,10 +59,7 @@ async def register(
             avatar_url=data.avatarUrl,
         )
     except EmailTaken:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": "email_taken", "message": "Email already registered."},
-        )
+        raise exceptions.email_taken_exc()
 
 
 @router.post("/request-verify-code", status_code=status.HTTP_202_ACCEPTED)
@@ -61,7 +74,14 @@ async def request_verify_code(
     return None
 
 
-@router.post("/verify-code", response_model=UserRead)
+@router.post(
+    "/verify-code",
+    response_model=UserRead,
+    responses={
+        **verification_failed_response,  # noqa F405
+        **verification_expired_response,  # noqa F405
+    },
+)
 async def verify_code(
     data: VerifyCodeIn,
     session: AsyncSession = Depends(get_session),
@@ -73,15 +93,9 @@ async def verify_code(
             code=data.code,
         )
     except InvalidCode:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": "verification_failed", "message": "Invalid code."},
-        )
+        raise exceptions.verification_failed_exc()
     except CodeExpired:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": "verification_failed", "message": "Code expired."},
-        )
+        raise exceptions.verification_expired_exc()
 
 
 @router.post("/request-reset-code", status_code=status.HTTP_202_ACCEPTED)
@@ -96,7 +110,15 @@ async def request_reset_code(
     return None
 
 
-@router.post("/reset-password", status_code=status.HTTP_204_NO_CONTENT)
+@router.post(
+    "/reset-password",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        **password_mismatch_response,  # noqa F405
+        **reset_failed_invalid_code_response,  # noqa F405
+        **reset_failed_code_expired_response,  # noqa F405
+    },
+)
 async def reset_password(
     data: ResetPasswordIn,
     session: AsyncSession = Depends(get_session),
@@ -111,17 +133,8 @@ async def reset_password(
         )
         return None
     except PasswordMismatch:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": "password_mismatch", "message": "Passwords do not match."},
-        )
+        raise exceptions.password_mismatch_exc()
     except InvalidCode:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": "reset_failed", "message": "Invalid code."},
-        )
+        raise exceptions.invalid_code_exc()
     except CodeExpired:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": "reset_failed", "message": "Code expired."},
-        )
+        raise exceptions.code_expired_exc()

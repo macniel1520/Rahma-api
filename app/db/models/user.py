@@ -42,7 +42,9 @@ class User(Base, TimestampMixin):
 
     # Back-references
     messages: Mapped[list["Message"]] = relationship("Message", back_populates="user")
-    email_verifications: Mapped[list["EmailVerification"]] = relationship("EmailVerification", back_populates="user")
+    email_verifications: Mapped[list["EmailVerification"]] = relationship(
+        "EmailVerification", back_populates="user"
+    )
     password_reset_codes: Mapped[list["PasswordResetCode"]] = relationship(
         "PasswordResetCode",
         back_populates="user",

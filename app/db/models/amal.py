@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from app.db.models.icon import Icon
 
 
-
 class Amal(Base, TimestampMixin):
     __tablename__ = "amal"
 
@@ -38,4 +37,6 @@ class Amal(Base, TimestampMixin):
 
     icon: Mapped["Icon"] = relationship("Icon", back_populates="amals")
     user: Mapped["User"] = relationship("User", back_populates="amals")
-    amal_category: Mapped["AmalCategory"] = relationship("AmalCategory", back_populates="amals")
+    amal_category: Mapped["AmalCategory"] = relationship(
+        "AmalCategory", back_populates="amals"
+    )
