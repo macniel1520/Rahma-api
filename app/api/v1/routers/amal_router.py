@@ -22,7 +22,13 @@ def get_amal_service(session: AsyncSession = Depends(get_session)) -> AmalServic
     )
 
 
-@router.get("/sync", response_model=AmalSyncResponse)
+@router.get(
+    "/sync",
+    response_model=AmalSyncResponse,
+    summary="Получить все амалы",
+    description="Получение всех амалов пользователя.",
+    response_description="Список амалов пользователя",
+)
 async def get_amals(
     current_user: CurrentUser,
     service: AmalService = Depends(get_amal_service),
@@ -30,7 +36,13 @@ async def get_amals(
     return await service.get_all(user_id=current_user.id)
 
 
-@router.post("/sync", response_model=AmalSyncResponse)
+@router.post(
+    "/sync",
+    response_model=AmalSyncResponse,
+    summary="Синхронизация амалов",
+    description="Синхронизация амалов пользователя.",
+    response_description="Амалы успешно синхронизированы",
+)
 async def sync_amals(
     request: AmalSyncRequest,
     current_user: CurrentUser,
