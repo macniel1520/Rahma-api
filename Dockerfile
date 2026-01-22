@@ -29,6 +29,7 @@ FROM python:3.12-slim-bookworm
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
     postgresql-client \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --system --gid 999 nonroot \

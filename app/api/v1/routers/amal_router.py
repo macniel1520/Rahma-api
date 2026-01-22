@@ -10,7 +10,7 @@ from app.db.engine import get_session
 from app.services.amal.amal_service import AmalService
 from app.services.auth.current_user import CurrentUser
 
-router = APIRouter(prefix="/amal", tags=["amal"])
+router = APIRouter(prefix="/amals", tags=["amals"])
 
 
 def get_amal_service(session: AsyncSession = Depends(get_session)) -> AmalService:
