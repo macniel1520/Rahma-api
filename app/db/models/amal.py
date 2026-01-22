@@ -37,6 +37,6 @@ class Amal(Base, TimestampMixin):
 
     icon: Mapped["Icon"] = relationship("Icon", back_populates="amals")
     user: Mapped["User"] = relationship("User", back_populates="amals")
-    amal_category: Mapped["AmalCategory"] = relationship(
+    category: Mapped["AmalCategory"] = relationship(
         "AmalCategory", back_populates="amals"
     )

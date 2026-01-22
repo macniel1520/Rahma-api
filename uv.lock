@@ -2,8 +2,12 @@ version = 1
 revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version < '3.14'",
+    "python_full_version >= '3.14' and sys_platform == 'win32'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.14' and sys_platform == 'win32'",
+    "python_full_version < '3.14' and sys_platform == 'emscripten'",
+    "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 
 [[package]]
@@ -989,6 +993,7 @@ dependencies = [
     { name = "passlib", extra = ["bcrypt"] },
     { name = "psycopg2" },
     { name = "pyjwt" },
+    { name = "scalar-fastapi" },
     { name = "sqlalchemy" },
     { name = "sqlalchemy-utils" },
     { name = "structlog" },
@@ -1011,6 +1016,7 @@ requires-dist = [
     { name = "passlib", extras = ["bcrypt"], specifier = ">=1.7.4" },
     { name = "psycopg2", specifier = ">=2.9.11" },
     { name = "pyjwt", specifier = ">=2.10.1" },
+    { name = "scalar-fastapi", specifier = ">=1.6.1" },
     { name = "sqlalchemy", specifier = ">=2.0.45" },
     { name = "sqlalchemy-utils", specifier = ">=0.42.1" },
     { name = "structlog", specifier = ">=25.5.0" },
@@ -1138,6 +1144,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/6a/c5/abd840d4132fd51a12f594934af5eba1d5d27298a6f5b5d6c3be45301caf/ruff-0.14.13-py3-none-win32.whl", hash = "sha256:ef720f529aec113968b45dfdb838ac8934e519711da53a0456038a0efecbd680", size = 12919024, upload-time = "2026-01-15T20:14:43.647Z" },
     { url = "https://files.pythonhosted.org/packages/c2/55/6384b0b8ce731b6e2ade2b5449bf07c0e4c31e8a2e68ea65b3bafadcecc5/ruff-0.14.13-py3-none-win_amd64.whl", hash = "sha256:6070bd026e409734b9257e03e3ef18c6e1a216f0435c6751d7a8ec69cb59abef", size = 14097887, upload-time = "2026-01-15T20:15:01.48Z" },
     { url = "https://files.pythonhosted.org/packages/4d/e1/7348090988095e4e39560cfc2f7555b1b2a7357deba19167b600fdf5215d/ruff-0.14.13-py3-none-win_arm64.whl", hash = "sha256:7ab819e14f1ad9fe39f246cfcc435880ef7a9390d81a2b6ac7e01039083dd247", size = 13080224, upload-time = "2026-01-15T20:14:45.853Z" },
+]
+
+[[package]]
+name = "scalar-fastapi"
+version = "1.6.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/db/56/bb31bc04d42b989db6933c2c3272d229d68baff0f95214e28e20886da8f6/scalar_fastapi-1.6.1.tar.gz", hash = "sha256:5d3cc96f0f384d388b58aba576a903b907e3c98dacab1339072210e946c4f033", size = 7753, upload-time = "2026-01-20T21:05:21.659Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e9/d9/6794a883410a01389ba6c7fece82f0586a57a7eaad9372b26016ad84e922/scalar_fastapi-1.6.1-py3-none-any.whl", hash = "sha256:880b3fa76b916fd2ee54b0fe340662944a1f95201f606902c2424b673c2cedaf", size = 7115, upload-time = "2026-01-20T21:05:20.457Z" },
 ]
 
 [[package]]

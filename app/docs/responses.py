@@ -1,4 +1,5 @@
 from app.schemas.error import ErrorResponse
+from fastapi import status
 
 
 def response_error(status_code: int, error: str, message: str):

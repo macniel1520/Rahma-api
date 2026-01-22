@@ -9,6 +9,8 @@ from app.db.models.hotel import Hotel
 from app.db.models.icon import Icon
 from app.db.models.location import Location
 from app.db.models.message import Message
+from app.db.models.password_reset_code import PasswordResetCode
+from app.db.models.refresh import RefreshToken
 from app.db.models.restaurant import Restaurant
 from app.db.models.route import Route
 from app.db.models.route_image import RouteImage
@@ -33,5 +35,7 @@ __all__ = [
     "AmalCategory",
     "Icon",
     "EmailVerification",
+    "PasswordResetCode",
     "Message",
+    "RefreshToken",
 ]
