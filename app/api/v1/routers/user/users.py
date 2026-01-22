@@ -9,7 +9,13 @@ from app.services.auth.current_user import CurrentActiveUser
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("/me", response_model=UserRead)
+@router.get(
+    "/me",
+    response_model=UserRead,
+    summary="Получение информации о текущем пользователе",
+    description="Получение информации о текущем пользователе.",
+    response_description="Информация о текущем пользователе",
+)
 async def get_me(
     user: CurrentActiveUser,
 ) -> User:

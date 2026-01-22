@@ -16,6 +16,9 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 @router.post(
     "/login",
     response_model=TokenPairOut,
+    summary="Вход в систему",
+    description="Вход в систему пользователя по email и паролю.",
+    response_description="Успешный вход в систему",
     responses={
         **invalid_credentials_response,  # noqa F405
     },
@@ -38,6 +41,9 @@ async def login(
 @router.post(
     "/refresh",
     response_model=TokenPairOut,
+    summary="Обновление токенов",
+    description="Обновление токенов доступа и обновления.",
+    response_description="Успешно обновлены токены",
     responses={
         **invalid_refresh_response,  # noqa F405
     },
@@ -56,7 +62,13 @@ async def refresh(
         raise invalid_refresh_exc()
 
 
-@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
+@router.post(
+    "/logout",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Выход из системы",
+    description="Выход из системы пользователя.",
+    response_description="Успешный выход из системы",
+)
 async def logout(
     data: LogoutIn,
     session: AsyncSession = Depends(get_session),

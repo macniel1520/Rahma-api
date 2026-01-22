@@ -39,6 +39,9 @@ router = APIRouter(prefix="/auth", tags=["auth"])
     "/register",
     response_model=UserRead,
     status_code=status.HTTP_201_CREATED,
+    summary="Регистрация пользователя",
+    description="Регистрация нового пользователя в системе.",
+    response_description="Пользователь успешно зарегистрирован",
     responses={
         **invalid_email_taken_response,  # noqa F405
     },
@@ -62,7 +65,13 @@ async def register(
         raise exceptions.email_taken_exc()
 
 
-@router.post("/request-verify-code", status_code=status.HTTP_202_ACCEPTED)
+@router.post(
+    "/request-verify-code",
+    status_code=status.HTTP_202_ACCEPTED,
+    summary="Запрос кода верификации",
+    description="Запрос кода верификации для подтверждения email пользователя.",
+    response_description="Код верификации успешно запрошен",
+)
 async def request_verify_code(
     data: RequestVerifyIn,
     session: AsyncSession = Depends(get_session),
@@ -77,6 +86,9 @@ async def request_verify_code(
 @router.post(
     "/verify-code",
     response_model=UserRead,
+    summary="Подтверждение кода верификации",
+    description="Подтверждение кода верификации для подтверждения email пользователя.",
+    response_description="Email пользователя успешно подтвержден",
     responses={
         **verification_failed_response,  # noqa F405
         **verification_expired_response,  # noqa F405
@@ -98,7 +110,13 @@ async def verify_code(
         raise exceptions.verification_expired_exc()
 
 
-@router.post("/request-reset-code", status_code=status.HTTP_202_ACCEPTED)
+@router.post(
+    "/request-reset-code",
+    status_code=status.HTTP_202_ACCEPTED,
+    summary="Запрос кода сброса пароля",
+    description="Запрос кода сброса пароля для сброса пароля пользователя.",
+    response_description="Код сброса пароля успешно запрошен",
+)
 async def request_reset_code(
     data: RequestResetCodeIn,
     session: AsyncSession = Depends(get_session),
@@ -113,6 +131,9 @@ async def request_reset_code(
 @router.post(
     "/reset-password",
     status_code=status.HTTP_204_NO_CONTENT,
+    summary="Сброс пароля",
+    description="Сброс пароля пользователя.",
+    response_description="Пароль пользователя успешно сброшен",
     responses={
         **password_mismatch_response,  # noqa F405
         **reset_failed_invalid_code_response,  # noqa F405
