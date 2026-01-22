@@ -16,6 +16,11 @@ class S3Settings(BaseModel):
         return f"https://{self.endpoint}/{self.bucket}"
 
 
+class AISettings(BaseModel):
+    api_key: str
+    model: str = "deepseek-chat"
+
+
 class DB(BaseModel):
     port: int = 5432
     host: str
@@ -70,6 +75,7 @@ class Settings(BaseSettings):
     jwt: JWT
     user_token: UserToken
     refresh_token: RefreshToken
+    ai: AISettings
 
     model_config = SettingsConfigDict(
         env_prefix="API_",

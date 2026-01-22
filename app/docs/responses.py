@@ -1,5 +1,6 @@
-from app.schemas.error import ErrorResponse
 from fastapi import status
+
+from app.schemas.error import ErrorResponse
 
 
 def response_error(status_code: int, error: str, message: str):
@@ -79,4 +80,10 @@ reset_failed_code_expired_response = response_error(
     status.HTTP_400_BAD_REQUEST,
     "reset_failed",
     "Code expired.",
+)
+
+unauthorized_response = response_error(
+    status.HTTP_401_UNAUTHORIZED,
+    "user_not_authorized",
+    "Authentication required.",
 )
