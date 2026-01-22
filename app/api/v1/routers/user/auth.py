@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from fastapi_users import FastAPIUsers
 
 from app.db.models.user import User
-from app.api.v1.schemas.user.user import UserRead, UserCreate, UserUpdate
+from app.api.v1.schemas.user.user import UserRead, UserCreate
 from app.services.auth.tokens import auth_backend
 from app.services.auth.user_manager import get_user_manager
 

@@ -1,17 +1,19 @@
 import uuid
 
 from fastapi import APIRouter, Depends, Path, Query
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.schemas.common.limit_offset_wrapper import LimitOffsetWrapper
 from app.api.v1.schemas.sabil.country_schema import CountryRead
-from app.db.cruds.country_repository import MockCountryRepository
+from app.db.cruds.country_repository import SqlAlchemyCountryRepository
+from app.db.engine import get_session
 from app.services.country.country_service import CountryService
 
 router = APIRouter(prefix="/countries", tags=["countries"])
 
 
-def get_country_service() -> CountryService:
-    return CountryService(repo=MockCountryRepository())
+def get_country_service(session: AsyncSession = Depends(get_session)) -> CountryService:
+    return CountryService(repo=SqlAlchemyCountryRepository(session=session))
 
 
 @router.get("", response_model=LimitOffsetWrapper[CountryRead])

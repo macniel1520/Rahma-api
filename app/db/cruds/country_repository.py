@@ -19,6 +19,7 @@ class CountryRepository(Protocol):
     async def get_list_with_routes_count(
         self, *, limit: int, offset: int
     ) -> Sequence[Country]: ...
+    async def get_total_count(self) -> int: ...
 
 
 class MockCountryRepository:
@@ -118,6 +119,9 @@ class MockCountryRepository:
         paged_countries = mock_countries[offset : offset + limit]
         return paged_countries
 
+    async def get_total_count(self) -> int:
+        return 3  # Mock total count
+
 
 class SqlAlchemyCountryRepository:
     def __init__(self, session: AsyncSession):
@@ -130,7 +134,7 @@ class SqlAlchemyCountryRepository:
 
         stmt = (
             select(Country)
-            .order_by(Country.created_at.desc())
+            .order_by(Country.createdAt.desc())
             .offset(offset)
             .limit(limit)
         )
@@ -167,7 +171,7 @@ class SqlAlchemyCountryRepository:
                 func.coalesce(routes_count_subq.c.routes_count, 0).label("routesCount"),
             )
             .outerjoin(routes_count_subq, Country.id == routes_count_subq.c.countryId)
-            .order_by(Country.created_at.desc())
+            .order_by(Country.createdAt.desc())
             .offset(offset)
             .limit(limit)
         )
@@ -182,3 +186,8 @@ class SqlAlchemyCountryRepository:
             countries.append(country)
 
         return countries
+
+    async def get_total_count(self) -> int:
+        stmt = select(func.count(Country.id))
+        result = await self._session.scalar(stmt)
+        return result or 0

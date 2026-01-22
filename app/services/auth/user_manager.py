@@ -14,7 +14,6 @@ from app.core.config import settings
 from app.db.engine import get_session
 from app.db.models.user import User
 from app.utils.emailer import send_email
-from app.api.v1 import exceptions
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):

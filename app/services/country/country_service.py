@@ -13,9 +13,10 @@ class CountryService:
         countries = await self._repo.get_list_with_routes_count(
             limit=limit, offset=offset
         )
+        total_count = await self._repo.get_total_count()
 
         return LimitOffsetWrapper(
-            count=len(countries),
+            count=total_count,
             items=[CountryRead.model_validate(country) for country in countries],
         )
 

@@ -1,14 +1,13 @@
 import asyncio
 from logging.config import fileConfig
-from alembic import context
-from sqlalchemy.exc import OperationalError
-from asyncpg.exceptions import CannotConnectNowError
 
-from app.db.engine import engine
-from app.db.models.base import Base
-from sqlalchemy.ext.asyncio import AsyncConnection
+from asyncpg.exceptions import CannotConnectNowError
+from sqlalchemy.exc import OperationalError
+
 from alembic import context
 from app.core.config import settings
+from app.db.engine import engine
+from app.db.models.base import Base
 
 config = context.config
 
@@ -22,7 +21,7 @@ target_metadata = Base.metadata
 async def wait_for_db(engine, retries=10, delay=3):
     for attempt in range(retries):
         try:
-            async with engine.connect() as connection:
+            async with engine.connect():
                 print("База данных доступна.")
                 return
         except (OperationalError, CannotConnectNowError):
