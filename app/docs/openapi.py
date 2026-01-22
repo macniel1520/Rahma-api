@@ -8,7 +8,7 @@ APP_DESCRIPTION = """
 
 [Контакты](https://t.me/macniel3)
 [Компания](https://facex.pro)
-[GitHub](https://github.com/FaceX-geo)
+[Репозиторий](https://github.com/FaceX-geo/rahma-api)
 """
 
 TAGS_METADATA = [

@@ -31,6 +31,8 @@ def create_app() -> FastAPI:
             "docExpansion": "none",
             "defaultModelsExpandDepth": 2,
             "defaultModelExpandDepth": 2,
+            "deepLinking": True,
+            "syntaxHighlight": {"theme": "obsidian"},
         },
         generate_unique_id_function=lambda route: route.name,
     )
