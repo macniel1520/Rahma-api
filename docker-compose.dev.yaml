@@ -6,6 +6,8 @@ services:
       POSTGRES_USER: ${API_DB__USER}
       POSTGRES_PASSWORD: ${API_DB__PASSWORD}
       POSTGRES_DB: ${API_DB__DATABASE}
+    ports:
+      - "${API_DB__PORT:-5432}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $API_DB__USER -d $API_DB__DATABASE"]
       interval: 5s
