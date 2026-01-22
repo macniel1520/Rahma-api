@@ -43,6 +43,6 @@ TAGS_METADATA = [
 ]
 
 SERVERS = [
-    {"url": "http://localhost:8000", "description": "Development"},
     {"url": "https://rahma.facex.pro", "description": "Staging"},
+    {"url": "http://localhost:8000", "description": "Development"},
 ]
