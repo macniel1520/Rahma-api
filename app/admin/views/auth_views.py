@@ -83,7 +83,7 @@ class EmailVerificationAdmin(ModelView, model=EmailVerification):
     ]
 
     form_excluded_columns = [
-        EmailVerification.code,  
+        EmailVerification.code,
     ]
 
     column_labels = {
@@ -130,7 +130,7 @@ class PasswordResetCodeAdmin(ModelView, model=PasswordResetCode):
     ]
 
     form_excluded_columns = [
-        PasswordResetCode.code, 
+        PasswordResetCode.code,
     ]
 
     column_labels = {
@@ -177,7 +177,7 @@ class RefreshTokenAdmin(ModelView, model=RefreshToken):
     ]
 
     form_excluded_columns = [
-        RefreshToken.tokenHash,  
+        RefreshToken.tokenHash,
     ]
 
     column_labels = {

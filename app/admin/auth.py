@@ -38,11 +38,13 @@ class AdminAuthBackend(AuthenticationBackend):
             if not verify_password(password, user.password):
                 return False
 
-            request.session.update({
-                "user_id": str(user.id),
-                "user_email": user.email,
-                "is_superuser": user.is_superuser,
-            })
+            request.session.update(
+                {
+                    "user_id": str(user.id),
+                    "user_email": user.email,
+                    "is_superuser": user.is_superuser,
+                }
+            )
 
             return True
 

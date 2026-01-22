@@ -1,5 +1,5 @@
 from sqladmin import ModelView
-        
+
 from app.db.models.country import Country
 
 
@@ -10,7 +10,6 @@ class CountryAdmin(ModelView, model=Country):
     name_plural = "Countries"
     icon = "fa-solid fa-flag"
 
-  
     column_list = [
         Country.id,
         Country.name,

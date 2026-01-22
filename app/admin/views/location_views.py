@@ -153,4 +153,4 @@ class RestaurantAdmin(ModelView, model=Restaurant):
         Restaurant.routeId: "Route ID",
         Restaurant.createdAt: "Created At",
         Restaurant.updatedAt: "Updated At",
-        }
+    }

@@ -51,7 +51,7 @@ class UserAdmin(ModelView, model=User):
     ]
 
     form_excluded_columns = [
-        User.password,  
+        User.password,
         User.createdAt,
         User.updatedAt,
     ]
