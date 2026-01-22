@@ -1,13 +1,14 @@
-import uuid
 import datetime
-from sqlalchemy_utils import EmailType
-from sqlalchemy.orm import Mapped, mapped_column, synonym, relationship
-from sqlalchemy import String, Boolean, Date
+import uuid
 from typing import TYPE_CHECKING
 
+from sqlalchemy import Boolean, Date, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship, synonym
+from sqlalchemy_utils import EmailType
+
 from app.core.config import settings
-from app.db.models.enums import UUID_PK
 from app.db.models.base import Base, TimestampMixin
+from app.db.models.enums import UUID_PK
 
 if TYPE_CHECKING:
     from app.db.models.message import Message
@@ -40,7 +41,6 @@ class User(Base, TimestampMixin):
     is_active = synonym("isActive")
     is_superuser = synonym("isSuperuser")
 
-    # Back-references
     messages: Mapped[list["Message"]] = relationship("Message", back_populates="user")
     email_verifications: Mapped[list["EmailVerification"]] = relationship(
         "EmailVerification", back_populates="user"
