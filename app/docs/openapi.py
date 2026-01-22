@@ -10,6 +10,13 @@ APP_DESCRIPTION = """
 [Контакты](https://t.me/macniel3)
 [Компания](https://facex.pro)
 [Репозиторий](https://github.com/FaceX-geo/rahma-api)
+
+[Swagger](https://rahma.facex.pro/swagger)
+[Redoc](https://rahma.facex.pro/redoc)
+[Scalar](https://rahma.facex.pro/scalar)
+[Elements](https://rahma.facex.pro/elements)
+
+
 """
 
 TAGS_METADATA = [
@@ -36,6 +43,10 @@ TAGS_METADATA = [
     {
         "name": "amals",
         "description": "Амалы",
+    },
+    {
+        "name": "messages",
+        "description": "Чат с ассадиком",
     },
     {
         "name": "default",

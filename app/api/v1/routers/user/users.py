@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 from app.api.v1.schemas.user.user import UserRead
 from app.db.models.user import User
-from app.services.auth.current_user import CurrentActiveUser
+from app.services.auth.current_user import CurrentUser
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -17,6 +17,6 @@ router = APIRouter(prefix="/users", tags=["users"])
     response_description="Информация о текущем пользователе",
 )
 async def get_me(
-    user: CurrentActiveUser,
+    user: CurrentUser,
 ) -> User:
     return user
