@@ -154,3 +154,4 @@ cython_debug/
 .ruff_cache
 
 .cursor
+.vscode
