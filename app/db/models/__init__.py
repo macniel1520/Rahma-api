@@ -1,5 +1,6 @@
 from app.db.models.amal import Amal
 from app.db.models.amal_category import AmalCategory
+from app.db.models.amal_completion import AmalCompletion
 from app.db.models.amal_template import AmalTemplate
 from app.db.models.base import Base
 from app.db.models.country import Country
@@ -32,6 +33,7 @@ __all__ = [
     "User",
     "UserRole",
     "Amal",
+    "AmalCompletion",
     "AmalCategory",
     "Icon",
     "EmailVerification",

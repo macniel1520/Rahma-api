@@ -1,69 +1,97 @@
 import asyncio
+import datetime
 import os
 import random
 
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.engine import AsyncSessionLocal  # sessionmaker(...)
+from app.db.engine import AsyncSessionLocal
+from app.db.models.amal import Amal
+from app.db.models.amal_category import AmalCategory
+from app.db.models.amal_completion import AmalCompletion
 from app.db.models.amal_template import AmalTemplate
 from app.db.models.country import Country
 from app.db.models.hotel import Hotel
+from app.db.models.icon import Icon
 from app.db.models.restaurant import Restaurant
 from app.db.models.route import Route
 from app.db.models.route_image import RouteImage
+from app.db.models.user import User
 from app.seeds.factories import (
+    AmalCategoryFactory,
+    AmalCompletionFactory,
+    AmalFactory,
     AmalTemplateFactory,
     CountryFactory,
     HotelFactory,
+    IconFactory,
     RestaurantFactory,
     RouteFactory,
     RouteImageFactory,
 )
+from app.services.auth.passwords import hash_password
 
 SEED_MARKER_COUNTRY = "SEED__COUNTRY__"
-
+SEED_MARKER_USER_EMAIL = "seed@seed.com"
+SEED_MARKER_ICON = "SEED__ICON__"
+SEED_MARKER_CATEGORY = "SEED__CATEGORY__"
 
 async def purge_seeded(session: AsyncSession) -> None:
+    # Purge seeded amal data
+    seeded_user = await session.scalar(
+        select(User).where(User.email == SEED_MARKER_USER_EMAIL)
+    )
+    if seeded_user:
+        # Delete completions first (they also cascade, but be explicit)
+        await session.execute(delete(AmalCompletion).where(AmalCompletion.userId == seeded_user.id))
+        await session.execute(delete(Amal).where(Amal.userId == seeded_user.id))
+
+    await session.execute(
+        delete(AmalCategory).where(AmalCategory.name.like(f"{SEED_MARKER_CATEGORY}%"))
+    )
+    await session.execute(
+        delete(Icon).where(Icon.url.like(f"{SEED_MARKER_ICON}%"))
+    )
+
+    # Purge seeded sabil data
     seeded_countries = (
         await session.scalars(
             select(Country.id).where(Country.name.like(f"{SEED_MARKER_COUNTRY}%"))
         )
     ).all()
 
-    if not seeded_countries:
-        return
-
-    await session.execute(
-        delete(AmalTemplate).where(
-            AmalTemplate.routeId.in_(
-                select(Route.id).where(Route.countryId.in_(seeded_countries))
+    if seeded_countries:
+        await session.execute(
+            delete(AmalTemplate).where(
+                AmalTemplate.routeId.in_(
+                    select(Route.id).where(Route.countryId.in_(seeded_countries))
+                )
             )
         )
-    )
-    await session.execute(
-        delete(Restaurant).where(
-            Restaurant.routeId.in_(
-                select(Route.id).where(Route.countryId.in_(seeded_countries))
+        await session.execute(
+            delete(Restaurant).where(
+                Restaurant.routeId.in_(
+                    select(Route.id).where(Route.countryId.in_(seeded_countries))
+                )
             )
         )
-    )
-    await session.execute(
-        delete(Hotel).where(
-            Hotel.routeId.in_(
-                select(Route.id).where(Route.countryId.in_(seeded_countries))
+        await session.execute(
+            delete(Hotel).where(
+                Hotel.routeId.in_(
+                    select(Route.id).where(Route.countryId.in_(seeded_countries))
+                )
             )
         )
-    )
-    await session.execute(
-        delete(RouteImage).where(
-            RouteImage.routeId.in_(
-                select(Route.id).where(Route.countryId.in_(seeded_countries))
+        await session.execute(
+            delete(RouteImage).where(
+                RouteImage.routeId.in_(
+                    select(Route.id).where(Route.countryId.in_(seeded_countries))
+                )
             )
         )
-    )
-    await session.execute(delete(Route).where(Route.countryId.in_(seeded_countries)))
-    await session.execute(delete(Country).where(Country.id.in_(seeded_countries)))
+        await session.execute(delete(Route).where(Route.countryId.in_(seeded_countries)))
+        await session.execute(delete(Country).where(Country.id.in_(seeded_countries)))
 
     await session.commit()
 
@@ -112,6 +140,74 @@ async def seed(session: AsyncSession) -> None:
 
             for _ in range(random.randint(1, 4)):
                 session.add(AmalTemplateFactory.build(route=r))
+
+    await session.commit()
+
+    # Seed amal data
+    await seed_amals(session)
+
+
+async def seed_amals(session: AsyncSession) -> None:
+    # Get or create seed user
+    seed_user = await session.scalar(
+        select(User).where(User.email == SEED_MARKER_USER_EMAIL)
+    )
+    if not seed_user:
+        seed_user = User(
+            email=SEED_MARKER_USER_EMAIL,
+            password=hash_password("seedseed"),
+            isVerified=True,
+            isActive=True,
+            name="Seed User",
+        )
+        session.add(seed_user)
+        await session.flush()
+
+    # Create icons
+    icons = []
+    for i in range(5):
+        icon = IconFactory.build(url=f"{SEED_MARKER_ICON}{i + 1}")
+        session.add(icon)
+        icons.append(icon)
+
+    await session.flush()
+
+    # Create categories
+    category_names = ["Намаз", "Дуа", "Зикр", "Чтение Корана", "Садака"]
+    categories = []
+    for name in category_names:
+        cat = AmalCategoryFactory.build(name=f"{SEED_MARKER_CATEGORY}{name}")
+        session.add(cat)
+        categories.append(cat)
+
+    await session.flush()
+
+    # Create amals for seed user
+    amals = []
+    for _ in range(random.randint(5, 10)):
+        amal = AmalFactory.build(
+            icon=random.choice(icons) if random.random() > 0.3 else None,
+            category=random.choice(categories) if random.random() > 0.3 else None,
+        )
+        amal.userId = seed_user.id
+        session.add(amal)
+        amals.append(amal)
+
+    await session.flush()
+
+    # Create completions for some amals (last 7 days)
+    for amal in amals:
+        # Create 0-5 completions per amal for different days
+        for days_ago in range(random.randint(0, 5)):
+            if random.random() > 0.4:  # 60% chance of completion
+                completion_date = datetime.date.today() - datetime.timedelta(days=days_ago)
+                completion = AmalCompletionFactory.build(
+                    date=completion_date,
+                    completedAt=datetime.datetime.now() - datetime.timedelta(days=days_ago),
+                )
+                completion.amalId = amal.id
+                completion.userId = seed_user.id
+                session.add(completion)
 
     await session.commit()
 

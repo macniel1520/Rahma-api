@@ -1,13 +1,18 @@
+import datetime
 import random
 import uuid
 
 import factory
 from faker import Faker
 
+from app.db.models.amal import Amal
+from app.db.models.amal_category import AmalCategory
+from app.db.models.amal_completion import AmalCompletion
 from app.db.models.amal_template import AmalTemplate
 from app.db.models.country import Country
 from app.db.models.enums import Category, CostLevel, ReccuringRule
 from app.db.models.hotel import Hotel
+from app.db.models.icon import Icon
 from app.db.models.location import Location
 from app.db.models.restaurant import Restaurant
 from app.db.models.route import Route
@@ -98,3 +103,69 @@ class AmalTemplateFactory(factory.Factory):
     reccuringRule = factory.LazyFunction(lambda: random.choice(list(ReccuringRule)))
 
     route = factory.SubFactory(RouteFactory)
+
+
+class IconFactory(factory.Factory):
+    class Meta:
+        model = Icon
+
+    id = factory.LazyFunction(uuid.uuid4)
+    url = factory.LazyFunction(lambda: fake.image_url(width=128, height=128))
+
+
+class AmalCategoryFactory(factory.Factory):
+    class Meta:
+        model = AmalCategory
+
+    id = factory.LazyFunction(uuid.uuid4)
+    name = factory.LazyFunction(
+        lambda: random.choice(
+            ["Намаз", "Дуа", "Зикр", "Чтение Корана", "Садака", "Пост", "Тахаджуд"]
+        )
+    )
+
+
+class AmalFactory(factory.Factory):
+    class Meta:
+        model = Amal
+
+    id = factory.LazyFunction(uuid.uuid4)
+    title = factory.LazyFunction(
+        lambda: random.choice(
+            [
+                "Утренний намаз",
+                "Зухр намаз",
+                "Аср намаз",
+                "Магриб намаз",
+                "Иша намаз",
+                "Чтение Корана",
+                "Утренние азкары",
+                "Вечерние азкары",
+                "Истигфар 100 раз",
+                "Салават 100 раз",
+            ]
+        )
+    )
+    date = factory.LazyFunction(lambda: datetime.date.today())
+    time = factory.LazyFunction(
+        lambda: datetime.time(random.randint(4, 22), random.randint(0, 59))
+    )
+    reccuringRule = factory.LazyFunction(lambda: random.choice(list(ReccuringRule)))
+
+    icon = factory.SubFactory(IconFactory)
+    category = factory.SubFactory(AmalCategoryFactory)
+
+
+class AmalCompletionFactory(factory.Factory):
+    class Meta:
+        model = AmalCompletion
+
+    id = factory.LazyFunction(uuid.uuid4)
+    date = factory.LazyFunction(lambda: datetime.date.today() - datetime.timedelta(days=random.randint(0, 7)))
+    completedAt = factory.LazyFunction(
+        lambda: datetime.datetime.now() - datetime.timedelta(
+            days=random.randint(0, 7),
+            hours=random.randint(0, 23),
+            minutes=random.randint(0, 59),
+        )
+    )
