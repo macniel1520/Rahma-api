@@ -11,7 +11,9 @@ from app.services.amal.reference_service import ReferenceService
 router = APIRouter(prefix="/reference", tags=["reference"])
 
 
-def get_reference_service(session: AsyncSession = Depends(get_session)) -> ReferenceService:
+def get_reference_service(
+    session: AsyncSession = Depends(get_session),
+) -> ReferenceService:
     return ReferenceService(
         category_repo=SqlAlchemyAmalCategoryRepository(session=session),
         icon_repo=SqlAlchemyIconRepository(session=session),

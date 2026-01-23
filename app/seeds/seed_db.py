@@ -12,6 +12,7 @@ from app.db.models.amal_category import AmalCategory
 from app.db.models.amal_completion import AmalCompletion
 from app.db.models.amal_template import AmalTemplate
 from app.db.models.country import Country
+from app.db.models.enums import ReccuringRule
 from app.db.models.hotel import Hotel
 from app.db.models.icon import Icon
 from app.db.models.restaurant import Restaurant
@@ -108,12 +109,56 @@ async def seed(session: AsyncSession) -> None:
     routes_per_country = 8
 
     countries = []
+    country_names = ["Saudi Arabia", "Turkey", "UAE", "Egypt", "Jordan"]
     for i in range(countries_count):
-        c = CountryFactory.build(
-            name=f"{SEED_MARKER_COUNTRY}{i + 1} {random.choice(['Saudi Arabia', 'Turkey', 'UAE', 'Egypt', 'Jordan'])}"
-        )
+        country_name = country_names[i % len(country_names)]
+        c = CountryFactory.build(name=f"{SEED_MARKER_COUNTRY}{i + 1} {country_name}")
         session.add(c)
         countries.append(c)
+
+    await session.flush()
+
+    # Создаем специальный маршрут для Мекки
+    saudi_country = next(
+        (c for c in countries if "Saudi Arabia" in c.name), countries[0]
+    )
+    mecca_route = RouteFactory.build(
+        country=saudi_country,
+        name="Хадж в Мекку - Священное паломничество",
+        content="Маршрут священного паломничества в Мекку. Посещение Заповедной мечети Аль-Харам, совершение тавафа вокруг Каабы, молитвы в священных местах. Маршрут включает все основные ритуалы хаджа: ихрам, стояние в Арафате, ночевку в Муздалифе и побивание камнями в Мине.",
+    )
+    session.add(mecca_route)
+
+    await session.flush()
+
+    # Добавляем данные для маршрута Мекки
+    for _ in range(3):
+        session.add(RouteImageFactory.build(route=mecca_route))
+
+    for _ in range(4):
+        session.add(RestaurantFactory.build(route=mecca_route))
+
+    for _ in range(3):
+        session.add(HotelFactory.build(route=mecca_route))
+
+    # Добавляем шаблоны амалов для Мекки
+    amal_templates_mecca = [
+        ("Совершить Талбию", "Повторять слова талбии при входе в состояние ихрама"),
+        ("Совершить два ракаата в мечети Аль-Харам", "Молитва приветствия мечети"),
+        ("Совершить таваф вокруг Каабы", "Семь кругов вокруг Священной Каабы"),
+        ("Молитва у места Ибрахима", "Два ракаата после тавафа"),
+        ("Пить воду из Замзама", "Пить святую воду источника Замзам"),
+    ]
+
+    for title, description in amal_templates_mecca:
+        template = AmalTemplateFactory.build(
+            route=mecca_route,
+            title=title,
+            reccuringRule=random.choice(list(ReccuringRule)),
+        )
+        # Переопределяем description
+        template.content = description
+        session.add(template)
 
     await session.flush()
 

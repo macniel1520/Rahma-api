@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.schemas.assadik.message import MessageCreate, MessageRead
 from app.db.cruds.assadik_repository import SqlAlchemyAssadikRepository
+from app.db.cruds.route_search_repository import SqlAlchemyRouteSearchRepository
 from app.db.engine import get_session
 from app.docs.responses import unauthorized_response
 from app.services.assadik.assadik_service import AssadikService
@@ -12,7 +13,10 @@ router = APIRouter(prefix="/messages", tags=["messages"])
 
 
 def get_assadik_service(session: AsyncSession = Depends(get_session)) -> AssadikService:
-    return AssadikService(repo=SqlAlchemyAssadikRepository(session=session))
+    return AssadikService(
+        repo=SqlAlchemyAssadikRepository(session=session),
+        route_search_repo=SqlAlchemyRouteSearchRepository(session=session),
+    )
 
 
 @router.post(
