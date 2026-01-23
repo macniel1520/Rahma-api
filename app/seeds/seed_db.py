@@ -21,6 +21,7 @@ from app.seeds.seed.sabil import (
     create_amal_templates_sabil,
 )
 from app.services.auth.passwords import hash_password
+from app.seeds.seed.user_admin import create_superuser
 
 SEED_USER_EMAIL = "seed@seed.com"
 
@@ -119,6 +120,8 @@ async def seed(session: AsyncSession) -> None:
 
     # Создаём amal данные (иконки, категории, амали для тестового пользователя)
     await seed_amals(session)
+
+    await create_superuser(session, email="admin@admin.com", password="adminadmin")
 
 
 async def seed_db() -> None:
