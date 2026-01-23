@@ -30,12 +30,14 @@ from app.seeds.factories import (
     RouteFactory,
     RouteImageFactory,
 )
+from app.seeds.seed.icon_amal import create_icons_amal
 from app.services.auth.passwords import hash_password
 
 SEED_MARKER_COUNTRY = "SEED__COUNTRY__"
 SEED_MARKER_USER_EMAIL = "seed@seed.com"
 SEED_MARKER_ICON = "SEED__ICON__"
 SEED_MARKER_CATEGORY = "SEED__CATEGORY__"
+
 
 
 async def purge_seeded(session: AsyncSession) -> None:
@@ -53,7 +55,6 @@ async def purge_seeded(session: AsyncSession) -> None:
     )
     await session.execute(delete(Icon).where(Icon.url.like(f"{SEED_MARKER_ICON}%")))
 
-    # Purge seeded sabil data
     seeded_countries = (
         await session.scalars(
             select(Country.id).where(Country.name.like(f"{SEED_MARKER_COUNTRY}%"))
@@ -103,6 +104,7 @@ async def seed(session: AsyncSession) -> None:
         raise RuntimeError("Seeding запрещен в prod окружении")
 
     await purge_seeded(session)
+    await create_icons_amal(session)
 
     countries_count = 5
     routes_per_country = 8
