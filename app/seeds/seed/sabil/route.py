@@ -17,23 +17,23 @@ async def create_route(
     category: Optional[Category] = None,
 ) -> Route:
     """Create a route with the given parameters."""
-    
+
     existing_route = await session.scalar(
         select(Route).where(Route.name == name, Route.countryId == country.id)
     )
     if existing_route:
         return existing_route
-    
+
     route = RouteFactory.build(country=country)
     route.name = name
-    
+
     if content:
         route.content = content
     if photo_url:
         route.photoUrl = photo_url
     if category:
         route.category = category
-    
+
     session.add(route)
     await session.commit()
     await session.refresh(route)
@@ -46,7 +46,7 @@ async def create_routes_for_country(
     routes_data: list[dict],
 ) -> list[Route]:
     """Create multiple routes for a country."""
-    
+
     routes = []
     for data in routes_data:
         route = await create_route(
@@ -58,7 +58,7 @@ async def create_routes_for_country(
             category=data.get("category"),
         )
         routes.append(route)
-    
+
     return routes
 
 
@@ -108,7 +108,7 @@ ROUTES_DATA_IRAQ = [
     {
         "name": "Кадимия (Багдад) — Аль-Кадимейн",
         "content": "Имам Муса аль-Казим (7-й) и Имам Мухаммад ат-Такый (9-й). Мавзолей Аль-Кадимейн. Постоянный поток паломников, особенно в религиозные даты.",
-        "photo_url": "https://s3.geometria.ru/rahma-test/countries/iraq/al_kadhimiya_mosque.webp", 
+        "photo_url": "https://s3.geometria.ru/rahma-test/countries/iraq/al_kadhimiya_mosque.webp",
         "category": Category.UMRAH,
     },
     {
@@ -132,19 +132,18 @@ ROUTES_DATA_EGYPT = [
         "photo_url": "https://s3.geometria.ru/rahma-test/countries/egypt/kair_al_azhar.webp",
         "category": Category.UMRAH,
     },
-    {       
+    {
         "name": "Каир — мечеть Аль-Хусейна",
         "content": "Самая почитаемая шиитская святыня Египта. По преданию, здесь хранится голова имама Хусейна. Место паломничества шиитов и суннитов (в Египте распространено почитание Ахль аль-Бейт).",
         "photo_url": "https://s3.geometria.ru/rahma-test/countries/egypt/kair_mechet_al_husein.webp",
         "category": Category.HISTORY,
     },
-    {       
+    {
         "name": "Каир — мечеть Сайида Зейнаб",
         "content": "Посвящена Зейнаб бинт Али, внучке пророка Мухаммада ﷺ. Один из главных центров суфийских маулидов (религиозных праздников).",
         "photo_url": "https://s3.geometria.ru/rahma-test/countries/egypt/mechet_sayeda_zainab_kair.webp",
         "category": Category.HISTORY,
     },
-
 ]
 
 
@@ -153,19 +152,19 @@ async def create_routes_sabil(
     countries: list[Country],
 ) -> dict[str, list[Route]]:
     """Create standard sabil routes for given countries."""
-    
+
     routes_map = {
         "Саудовская Аравия": ROUTES_DATA_SAUDI,
         "Иран": ROUTES_DATA_IRAN,
         "Ирак": ROUTES_DATA_IRAQ,
         "Египет": ROUTES_DATA_EGYPT,
     }
-    
+
     result = {}
     for country in countries:
         routes_data = routes_map.get(country.name, [])
         if routes_data:
             routes = await create_routes_for_country(session, country, routes_data)
             result[country.name] = routes
-    
+
     return result

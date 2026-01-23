@@ -12,17 +12,17 @@ async def create_category(
     icon_id: Optional[int] = None,
 ) -> AmalCategory:
     """Create an amal category with the given name."""
-    
+
     existing_category = await session.scalar(
         select(AmalCategory).where(AmalCategory.name == name)
     )
     if existing_category:
         return existing_category
-    
+
     category = AmalCategoryFactory.build(name=name)
     if icon_id:
         category.iconId = icon_id
-    
+
     session.add(category)
     await session.commit()
     await session.refresh(category)
@@ -34,12 +34,12 @@ async def create_categories(
     names: list[str],
 ) -> list[AmalCategory]:
     """Create multiple amal categories with the given names."""
-    
+
     categories = []
     for name in names:
         category = await create_category(session, name)
         categories.append(category)
-    
+
     return categories
 
 

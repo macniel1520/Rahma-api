@@ -11,11 +11,11 @@ async def create_location(
     lng: str,
 ) -> Location:
     """Create a location with the given coordinates."""
-    
+
     location = LocationFactory.build()
     location.lat = lat
     location.lng = lng
-    
+
     session.add(location)
     await session.commit()
     await session.refresh(location)
@@ -28,7 +28,7 @@ async def create_location_optional(
     lng: Optional[str] = None,
 ) -> Optional[Location]:
     """Create a location if coordinates are provided."""
-    
+
     if lat and lng:
         return await create_location(session, lat, lng)
     return None

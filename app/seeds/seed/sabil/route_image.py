@@ -12,19 +12,16 @@ async def create_route_image(
     url: str,
 ) -> RouteImage:
     """Create a route image with the given URL."""
-    
+
     existing_image = await session.scalar(
-        select(RouteImage).where(
-            RouteImage.routeId == route.id,
-            RouteImage.url == url
-        )
+        select(RouteImage).where(RouteImage.routeId == route.id, RouteImage.url == url)
     )
     if existing_image:
         return existing_image
-    
+
     image = RouteImageFactory.build(route=route)
     image.url = url
-    
+
     session.add(image)
     await session.commit()
     await session.refresh(image)
@@ -37,12 +34,12 @@ async def create_route_images(
     urls: list[str],
 ) -> list[RouteImage]:
     """Create multiple route images."""
-    
+
     images = []
     for url in urls:
         image = await create_route_image(session, route, url)
         images.append(image)
-    
+
     return images
 
 
@@ -95,12 +92,12 @@ async def create_route_images_sabil(
     routes: list[Route],
 ) -> list[RouteImage]:
     """Create standard sabil route images for given routes."""
-    
+
     all_images = []
     for route in routes:
         urls = ROUTE_IMAGES_DATA.get(route.name, [])
         if urls:
             images = await create_route_images(session, route, urls)
             all_images.extend(images)
-    
+
     return all_images

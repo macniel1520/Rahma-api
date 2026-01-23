@@ -4,6 +4,7 @@ from app.services.auth.passwords import hash_password
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
+
 async def create_superuser(
     session: AsyncSession,
     email: str,

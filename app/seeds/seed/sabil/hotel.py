@@ -4,7 +4,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models.hotel import Hotel
 from app.db.models.route import Route
-from app.db.models.location import Location
 from app.seeds.factories import HotelFactory
 from app.seeds.seed.sabil.location_hotel import create_location_optional
 
@@ -22,21 +21,18 @@ async def create_hotel(
     lng: Optional[str] = None,
 ) -> Hotel:
     """Create a hotel with the given parameters."""
-    
+
     existing_hotel = await session.scalar(
-        select(Hotel).where(
-            Hotel.routeId == route.id,
-            Hotel.name == name
-        )
+        select(Hotel).where(Hotel.routeId == route.id, Hotel.name == name)
     )
     if existing_hotel:
         return existing_hotel
-    
+
     location = await create_location_optional(session, lat, lng)
-    
+
     hotel = HotelFactory.build(route=route, location=location)
     hotel.name = name
-    
+
     if description:
         hotel.description = description
     if photo_url:
@@ -47,7 +43,7 @@ async def create_hotel(
         hotel.scoreCount = score_count
     if avg_price is not None:
         hotel.avgPrice = avg_price
-    
+
     session.add(hotel)
     await session.commit()
     await session.refresh(hotel)
@@ -60,7 +56,7 @@ async def create_hotels_for_route(
     hotels_data: list[dict],
 ) -> list[Hotel]:
     """Create multiple hotels for a route."""
-    
+
     hotels = []
     for data in hotels_data:
         hotel = await create_hotel(
@@ -76,7 +72,7 @@ async def create_hotels_for_route(
             lng=data.get("lng"),
         )
         hotels.append(hotel)
-    
+
     return hotels
 
 
@@ -119,10 +115,10 @@ async def create_hotels_sabil(
     routes: list[Route],
 ) -> list[Hotel]:
     """Create standard sabil hotels for all routes."""
-    
+
     all_hotels = []
     for route in routes:
         hotels = await create_hotels_for_route(session, route, HOTELS_DATA)
         all_hotels.extend(hotels)
-    
+
     return all_hotels

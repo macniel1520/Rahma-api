@@ -1,12 +1,9 @@
 import datetime
 import random
 from typing import Optional
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models.amal import Amal
-from app.db.models.icon import Icon
-from app.db.models.amal_category import AmalCategory
 from app.seeds.factories import AmalFactory
 from app.seeds.seed.amal.icon_amal import create_icons_amal
 from app.seeds.seed.amal.amal_category import create_categories_amal
@@ -22,11 +19,11 @@ async def create_amal(
     time: Optional[datetime.time] = None,
 ) -> Amal:
     """Create an amal with the given parameters."""
-    
+
     amal = AmalFactory.build()
     amal.userId = user_id
     amal.title = title
-    
+
     if icon_id:
         amal.iconId = icon_id
     if category_id:
@@ -35,7 +32,7 @@ async def create_amal(
         amal.date = date
     if time:
         amal.time = time
-    
+
     session.add(amal)
     await session.commit()
     await session.refresh(amal)
@@ -48,10 +45,10 @@ async def create_amals_with_icons_and_categories(
     count: int = 10,
 ) -> list[Amal]:
     """Create multiple amals with icons and categories."""
-    
+
     icons = await create_icons_amal(session)
     categories = await create_categories_amal(session)
-    
+
     amal_titles = [
         "Утренний намаз",
         "Зухр намаз",
@@ -69,26 +66,26 @@ async def create_amals_with_icons_and_categories(
         "Навестить больного",
         "Учить суру",
     ]
-    
+
     amals = []
     for _ in range(count):
         title = random.choice(amal_titles)
         icon = random.choice(icons) if random.random() > 0.3 else None
         category = random.choice(categories) if random.random() > 0.3 else None
-        
+
         amal = AmalFactory.build(
             icon=icon,
             category=category,
         )
         amal.userId = user_id
         amal.title = title
-        
+
         session.add(amal)
         amals.append(amal)
-    
+
     await session.commit()
-    
+
     for amal in amals:
         await session.refresh(amal)
-    
+
     return amals

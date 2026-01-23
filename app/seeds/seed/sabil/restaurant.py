@@ -20,20 +20,19 @@ async def create_restaurant(
     cost_level: Optional[CostLevel] = None,
 ) -> Restaurant:
     """Create a restaurant with the given parameters."""
-    
+
     existing_restaurant = await session.scalar(
         select(Restaurant).where(
-            Restaurant.routeId == route.id,
-            Restaurant.name == name
+            Restaurant.routeId == route.id, Restaurant.name == name
         )
     )
     if existing_restaurant:
         return existing_restaurant
-    
+
     restaurant = RestaurantFactory.build(route=route)
     restaurant.name = name
     restaurant.isHaram = is_haram
-    
+
     if description:
         restaurant.description = description
     if photo_url:
@@ -44,7 +43,7 @@ async def create_restaurant(
         restaurant.scoreCount = score_count
     if cost_level:
         restaurant.costLevel = cost_level
-    
+
     session.add(restaurant)
     await session.commit()
     await session.refresh(restaurant)
@@ -57,7 +56,7 @@ async def create_restaurants_for_route(
     restaurants_data: list[dict],
 ) -> list[Restaurant]:
     """Create multiple restaurants for a route."""
-    
+
     restaurants = []
     for data in restaurants_data:
         restaurant = await create_restaurant(
@@ -72,7 +71,7 @@ async def create_restaurants_for_route(
             cost_level=data.get("cost_level"),
         )
         restaurants.append(restaurant)
-    
+
     return restaurants
 
 
@@ -83,7 +82,7 @@ RESTAURANTS_DATA = [
         "photo_url": "https://s3.geometria.ru/rahma-test/restaurants/al_baik_logo.svg",
         "avg_score": 4.5,
         "score_count": 15000,
-        "is_haram": True,                                               
+        "is_haram": True,
         "cost_level": CostLevel.HIGH,
     },
     {
@@ -112,10 +111,12 @@ async def create_restaurants_sabil(
     routes: list[Route],
 ) -> list[Restaurant]:
     """Create standard sabil restaurants for all routes."""
-    
+
     all_restaurants = []
     for route in routes:
-        restaurants = await create_restaurants_for_route(session, route, RESTAURANTS_DATA)
+        restaurants = await create_restaurants_for_route(
+            session, route, RESTAURANTS_DATA
+        )
         all_restaurants.extend(restaurants)
-    
+
     return all_restaurants

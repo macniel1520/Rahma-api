@@ -12,17 +12,15 @@ async def create_icon(
     name: Optional[str] = None,
 ) -> Icon:
     """Create an icon with the given URL."""
-    
-    existing_icon = await session.scalar(
-        select(Icon).where(Icon.url == url)
-    )
+
+    existing_icon = await session.scalar(select(Icon).where(Icon.url == url))
     if existing_icon:
         return existing_icon
-    
+
     icon = IconFactory.build(url=url)
     if name:
         icon.name = name
-    
+
     session.add(icon)
     await session.commit()
     await session.refresh(icon)
@@ -34,12 +32,12 @@ async def create_icons(
     urls: list[str],
 ) -> list[Icon]:
     """Create multiple icons with the given URLs."""
-    
+
     icons = []
     for url in urls:
         icon = await create_icon(session, url)
         icons.append(icon)
-    
+
     return icons
 
 
