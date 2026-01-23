@@ -114,9 +114,3 @@ class AmalSyncResponse(AttributeMixin):
         title="Завершенные амалы",
         description="Список завершений амалов для синхронизации.",
     )
-    categories: list[AmalCategoryRead] = Field(
-        default_factory=list, title="Категории", description="Список категорий амалов."
-    )
-    icons: list[IconRead] = Field(
-        default_factory=list, title="Иконки", description="Список иконок амалов."
-    )
