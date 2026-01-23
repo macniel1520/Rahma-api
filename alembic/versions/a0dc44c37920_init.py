@@ -1,20 +1,20 @@
 """init
 
-Revision ID: 6f0217677bc7
+Revision ID: a0dc44c37920
 Revises:
-Create Date: 2026-01-22 16:55:02.923555
+Create Date: 2026-01-23 13:41:36.372737
 
 """
 
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 import sqlalchemy_utils
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "6f0217677bc7"
+revision: str = "a0dc44c37920"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -441,4 +441,6 @@ def downgrade() -> None:
     op.drop_table("icon")
     op.drop_table("country")
     op.drop_table("amal_category")
+    # ### end Alembic commands ###
+    # ### end Alembic commands ###
     # ### end Alembic commands ###
