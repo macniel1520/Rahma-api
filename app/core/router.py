@@ -7,6 +7,7 @@ from app.api.v1.routers.route_router import router as route_router
 from app.api.v1.routers.user.auth import router as auth_router
 from app.api.v1.routers.user.session import router as session_router
 from app.api.v1.routers.user.users import router as users_router
+from app.api.v1.routers.jes_router import router as jes_router
 
 
 def setup_routes(app: FastAPI) -> None:
@@ -20,6 +21,7 @@ def setup_routes(app: FastAPI) -> None:
     api_router.include_router(country_router)
     api_router.include_router(route_router)
     api_router.include_router(messages_router)
+    api_router.include_router(jes_router)
     app.include_router(api_router)
 
     @app.get("/health")

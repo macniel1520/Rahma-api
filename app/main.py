@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from app.admin.admin import create_admin_app
+from app.core.error import register_exception_handlers
 from app.core.middleware import setup_middlewares
 from app.core.router import setup_routes
 from app.docs.elements import setup_elements
@@ -41,6 +42,7 @@ def create_app() -> FastAPI:
 
     setup_logging()
     setup_middlewares(app)
+    register_exception_handlers(app)
     setup_routes(app)
     setup_scalar(app)
     setup_elements(app)

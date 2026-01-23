@@ -33,6 +33,10 @@ TAGS_METADATA = [
         "description": "Пользователи и профили",
     },
     {
+        "name": "jes",
+        "description": "Just esim integration",
+    },
+    {
         "name": "countries",
         "description": "Страны и маршруты",
     },
