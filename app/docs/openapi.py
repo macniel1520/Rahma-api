@@ -53,6 +53,10 @@ TAGS_METADATA = [
         "description": "Чат с ассадиком",
     },
     {
+        "name": "reference",
+        "description": "Справочники",
+    },
+    {
         "name": "default",
         "description": "Служебные эндпоинты",
     },
