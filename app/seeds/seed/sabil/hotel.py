@@ -80,121 +80,49 @@ async def create_hotels_for_route(
     return hotels
 
 
-HOTELS_DATA = {
-    "Мекка — священный город": [
-        {
-            "name": "Makkah Clock Royal Tower",
-            "description": "Роскошный отель с видом на Каабу в комплексе Абрадж аль-Бейт.",
-            "photo_url": "https://s3.geometria.ru/rahma-test/hotels/clock-tower.webp",
-            "avg_score": 4.8,
-            "score_count": 12500,
-            "avg_price": 450.0,
-            "lat": "21.418890",
-            "lng": "39.826180",
-        },
-        {
-            "name": "Swissotel Makkah",
-            "description": "5-звёздочный отель в нескольких минутах ходьбы от Масджид аль-Харам.",
-            "photo_url": "https://s3.geometria.ru/rahma-test/hotels/swissotel-makkah.webp",
-            "avg_score": 4.6,
-            "score_count": 8900,
-            "avg_price": 320.0,
-            "lat": "21.420100",
-            "lng": "39.827500",
-        },
-        {
-            "name": "Hilton Suites Makkah",
-            "description": "Комфортабельные номера-люкс для семей и групп паломников.",
-            "photo_url": "https://s3.geometria.ru/rahma-test/hotels/hilton-makkah.webp",
-            "avg_score": 4.5,
-            "score_count": 6200,
-            "avg_price": 280.0,
-            "lat": "21.421500",
-            "lng": "39.825900",
-        },
-    ],
-    "Медина — город Пророка": [
-        {
-            "name": "The Oberoi Madina",
-            "description": "Элегантный отель рядом с мечетью Пророка.",
-            "photo_url": "https://s3.geometria.ru/rahma-test/hotels/oberoi-madina.webp",
-            "avg_score": 4.9,
-            "score_count": 5600,
-            "avg_price": 380.0,
-            "lat": "24.467700",
-            "lng": "39.610500",
-        },
-        {
-            "name": "Dar Al Taqwa Hotel",
-            "description": "Отель с прямым выходом к площади мечети Пророка.",
-            "photo_url": "https://s3.geometria.ru/rahma-test/hotels/dar-al-taqwa.webp",
-            "avg_score": 4.4,
-            "score_count": 7800,
-            "avg_price": 220.0,
-            "lat": "24.468200",
-            "lng": "39.611000",
-        },
-    ],
-    "Каир — город тысячи минаретов": [
-        {
-            "name": "Four Seasons Cairo at Nile Plaza",
-            "description": "Роскошный отель на берегу Нила с видом на пирамиды.",
-            "photo_url": "https://s3.geometria.ru/rahma-test/hotels/four-seasons-cairo.webp",
-            "avg_score": 4.7,
-            "score_count": 4300,
-            "avg_price": 350.0,
-            "lat": "30.044500",
-            "lng": "31.232800",
-        },
-        {
-            "name": "Marriott Mena House",
-            "description": "Исторический отель у подножия пирамид Гизы.",
-            "photo_url": "https://s3.geometria.ru/rahma-test/hotels/mena-house.webp",
-            "avg_score": 4.6,
-            "score_count": 5100,
-            "avg_price": 280.0,
-            "lat": "29.976400",
-            "lng": "31.138100",
-        },
-    ],
-    "Мешхед — город имама Резы": [
-        {
-            "name": "Darvishi Royal Hotel",
-            "description": "5-звёздочный отель недалеко от святыни имама Резы.",
-            "photo_url": "https://s3.geometria.ru/rahma-test/hotels/darvishi.webp",
-            "avg_score": 4.5,
-            "score_count": 3200,
-            "avg_price": 150.0,
-            "lat": "36.287600",
-            "lng": "59.615800",
-        },
-    ],
-    "Кербела — город имама Хусейна": [
-        {
-            "name": "Karbala Hotel",
-            "description": "Отель рядом со святыней имама Хусейна.",
-            "photo_url": "https://s3.geometria.ru/rahma-test/hotels/karbala-hotel.webp",
-            "avg_score": 4.2,
-            "score_count": 2100,
-            "avg_price": 80.0,
-            "lat": "32.616700",
-            "lng": "44.032200",
-        },
-    ],
-}
+HOTELS_DATA = [
+    {
+        "name": "Selat Al Bait Hotel",
+        "description": "Из окон открывается вид на город. В распоряжении гостей отеля с 3 звездами — бесплатный Wi-Fi, доставка еды и напитков и круглосуточная стойка регистрации. К услугам гостей отеля — бесплатная частная парковка. Желающие осмотреть окрестности могут воспользоваться трансфером.",
+        "photo_url": "https://s3.geometria.ru/rahma-test/hotels/selat-al-bait_hotel.webp",
+        "avg_score": 4.8,
+        "score_count": 12500,
+        "avg_price": 450.0,
+        "lat": "21.418890",
+        "lng": "39.826180",
+    },
+    {
+        "name": "Three Pearls Musalli Hotel",
+        "description": "Отель в городе Мекка, находится в 1,9 км и 10 км от таких достопримечательностей, как Мечеть аль-Харам и Пещера Хира. Среди удобств отеля с 3 звездами — ресторан, а также номера с кондиционером, бесплатным Wi-Fi и собственной ванной комнатой. В распоряжении гостей доставка еды и напитков, услуги консьержа и камера хранения багажа.",
+        "photo_url": "https://s3.geometria.ru/rahma-test/hotels/three_pearls_musali_hotel.webp",
+        "avg_score": 4.6,
+        "score_count": 8900,
+        "avg_price": 320.0,
+        "lat": "21.420100",
+        "lng": "39.827500",
+    },
+    {
+        "name": "Wirgan Hotel Al Nour",
+        "description": "Отель с 4 звездами в городе Мекка, в 4 км и 7,7 км соответственно от таких достопримечательностей, как Пещера Хира и Мечеть аль-Харам. В числе прочих удобств — ресторан, детский клуб и доставка еды и напитков, а также бесплатный Wi-Fi на всей территории. На территории имеется частная парковка.",
+        "photo_url": "https://s3.geometria.ru/rahma-test/hotels/wirgan_al_noor.webp",
+        "avg_score": 4.5,
+        "score_count": 6200,
+        "avg_price": 280.0,
+        "lat": "21.421500",
+        "lng": "39.825900",
+    },
+]
 
 
 async def create_hotels_sabil(
     session: AsyncSession,
     routes: list[Route],
 ) -> list[Hotel]:
-    """Create standard sabil hotels for given routes."""
+    """Create standard sabil hotels for all routes."""
     
     all_hotels = []
     for route in routes:
-        hotels_data = HOTELS_DATA.get(route.name, [])
-        if hotels_data:
-            hotels = await create_hotels_for_route(session, route, hotels_data)
-            all_hotels.extend(hotels)
+        hotels = await create_hotels_for_route(session, route, HOTELS_DATA)
+        all_hotels.extend(hotels)
     
     return all_hotels

@@ -3,195 +3,95 @@ import datetime
 import os
 import random
 
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.engine import AsyncSessionLocal
-from app.db.models.amal import Amal
-from app.db.models.amal_category import AmalCategory
 from app.db.models.amal_completion import AmalCompletion
-from app.db.models.amal_template import AmalTemplate
-from app.db.models.country import Country
-from app.db.models.hotel import Hotel
-from app.db.models.icon import Icon
-from app.db.models.restaurant import Restaurant
-from app.db.models.route import Route
-from app.db.models.route_image import RouteImage
 from app.db.models.user import User
-from app.seeds.factories import (
-    AmalCategoryFactory,
-    AmalCompletionFactory,
-    AmalFactory,
-    AmalTemplateFactory,
-    CountryFactory,
-    HotelFactory,
-    IconFactory,
-    RestaurantFactory,
-    RouteFactory,
-    RouteImageFactory,
+from app.seeds.factories import AmalCompletionFactory
+from app.seeds.seed.amal.icon_amal import create_icons_amal
+from app.seeds.seed.amal.amal_category import create_categories_amal
+from app.seeds.seed.amal.amal import create_amals_with_icons_and_categories
+from app.seeds.seed.sabil import (
+    create_countries_sabil,
+    create_routes_sabil,
+    create_route_images_sabil,
+    create_restaurants_sabil,
+    create_hotels_sabil,
+    create_amal_templates_sabil,
 )
-from app.seeds.seed.icon_amal import create_icons_amal
 from app.services.auth.passwords import hash_password
 
-SEED_MARKER_COUNTRY = "SEED__COUNTRY__"
-SEED_MARKER_USER_EMAIL = "seed@seed.com"
-SEED_MARKER_ICON = "SEED__ICON__"
-SEED_MARKER_CATEGORY = "SEED__CATEGORY__"
+SEED_USER_EMAIL = "seed@seed.com"
 
 
-
-async def purge_seeded(session: AsyncSession) -> None:
-    seeded_user = await session.scalar(
-        select(User).where(User.email == SEED_MARKER_USER_EMAIL)
-    )
-    if seeded_user:
-        await session.execute(
-            delete(AmalCompletion).where(AmalCompletion.userId == seeded_user.id)
-        )
-        await session.execute(delete(Amal).where(Amal.userId == seeded_user.id))
-
-    await session.execute(
-        delete(AmalCategory).where(AmalCategory.name.like(f"{SEED_MARKER_CATEGORY}%"))
-    )
-    await session.execute(delete(Icon).where(Icon.url.like(f"{SEED_MARKER_ICON}%")))
-
-    seeded_countries = (
-        await session.scalars(
-            select(Country.id).where(Country.name.like(f"{SEED_MARKER_COUNTRY}%"))
-        )
-    ).all()
-
-    if seeded_countries:
-        await session.execute(
-            delete(AmalTemplate).where(
-                AmalTemplate.routeId.in_(
-                    select(Route.id).where(Route.countryId.in_(seeded_countries))
-                )
-            )
-        )
-        await session.execute(
-            delete(Restaurant).where(
-                Restaurant.routeId.in_(
-                    select(Route.id).where(Route.countryId.in_(seeded_countries))
-                )
-            )
-        )
-        await session.execute(
-            delete(Hotel).where(
-                Hotel.routeId.in_(
-                    select(Route.id).where(Route.countryId.in_(seeded_countries))
-                )
-            )
-        )
-        await session.execute(
-            delete(RouteImage).where(
-                RouteImage.routeId.in_(
-                    select(Route.id).where(Route.countryId.in_(seeded_countries))
-                )
-            )
-        )
-        await session.execute(
-            delete(Route).where(Route.countryId.in_(seeded_countries))
-        )
-        await session.execute(delete(Country).where(Country.id.in_(seeded_countries)))
-
-    await session.commit()
-
-
-async def seed(session: AsyncSession) -> None:
-    env = os.getenv("ENV", "dev")
-    if env == "prod":
-        raise RuntimeError("Seeding запрещен в prod окружении")
-
-    await purge_seeded(session)
-    await create_icons_amal(session)
-
-    countries_count = 5
-    routes_per_country = 8
-
-    countries = []
-    for i in range(countries_count):
-        c = CountryFactory.build(
-            name=f"{SEED_MARKER_COUNTRY}{i + 1} {random.choice(['Saudi Arabia', 'Turkey', 'UAE', 'Egypt', 'Jordan'])}"
-        )
-        session.add(c)
-        countries.append(c)
-
-    await session.flush()
-
-    for country in countries:
-        routes = []
-        for _ in range(routes_per_country):
-            r = RouteFactory.build(country=country)
-            session.add(r)
-            routes.append(r)
-
-        await session.flush()
-
-        for r in routes:
-            for _ in range(random.randint(2, 6)):
-                session.add(RouteImageFactory.build(route=r))
-
-            for _ in range(random.randint(2, 8)):
-                session.add(RestaurantFactory.build(route=r))
-
-            for _ in range(random.randint(1, 5)):
-                if random.random() < 0.2:
-                    session.add(HotelFactory.build(route=r, location=None))
-                else:
-                    session.add(HotelFactory.build(route=r))
-
-            for _ in range(random.randint(1, 4)):
-                session.add(AmalTemplateFactory.build(route=r))
-
-    await session.commit()
-    await seed_amals(session)
+async def seed_sabil(session: AsyncSession) -> None:
+    """Seed sabil data: countries, routes, images, restaurants, hotels, amal templates."""
+    
+    # 1. Создаём страны (нет зависимостей)
+    countries = await create_countries_sabil(session)
+    print(f"Created {len(countries)} countries")
+    
+    # 2. Создаём маршруты (зависят от Country)
+    routes_map = await create_routes_sabil(session, countries)
+    all_routes = [route for routes in routes_map.values() for route in routes]
+    print(f"Created {len(all_routes)} routes")
+    
+    # 3. Создаём изображения маршрутов (зависят от Route)
+    route_images = await create_route_images_sabil(session, all_routes)
+    print(f"Created {len(route_images)} route images")
+    
+    # 4. Создаём рестораны (зависят от Route)
+    restaurants = await create_restaurants_sabil(session, all_routes)
+    print(f"Created {len(restaurants)} restaurants")
+    
+    # 5. Создаём отели (зависят от Route)
+    hotels = await create_hotels_sabil(session, all_routes)
+    print(f"Created {len(hotels)} hotels")
+    
+    # 6. Создаём шаблоны амалей (зависят от Route)
+    amal_templates = await create_amal_templates_sabil(session, all_routes)
+    print(f"Created {len(amal_templates)} amal templates")
 
 
 async def seed_amals(session: AsyncSession) -> None:
+    """Seed amals data: icons, categories, amals for test user."""
+    
+    # Получаем или создаём тестового пользователя
     seed_user = await session.scalar(
-        select(User).where(User.email == SEED_MARKER_USER_EMAIL)
+        select(User).where(User.email == SEED_USER_EMAIL)
     )
     if not seed_user:
         seed_user = User(
-            email=SEED_MARKER_USER_EMAIL,
+            email=SEED_USER_EMAIL,
             password=hash_password("seedseed"),
             isVerified=True,
             isActive=True,
             name="Seed User",
         )
         session.add(seed_user)
-        await session.flush()
-
-    icons = []
-    for i in range(5):
-        icon = IconFactory.build(url=f"{SEED_MARKER_ICON}{i + 1}")
-        session.add(icon)
-        icons.append(icon)
-
-    await session.flush()
-
-    category_names = ["Намаз", "Дуа", "Зикр", "Чтение Корана", "Садака"]
-    categories = []
-    for name in category_names:
-        cat = AmalCategoryFactory.build(name=f"{SEED_MARKER_CATEGORY}{name}")
-        session.add(cat)
-        categories.append(cat)
-
-    await session.flush()
-
-    amals = []
-    for _ in range(random.randint(5, 10)):
-        amal = AmalFactory.build(
-            icon=random.choice(icons) if random.random() > 0.3 else None,
-            category=random.choice(categories) if random.random() > 0.3 else None,
-        )
-        amal.userId = seed_user.id
-        session.add(amal)
-        amals.append(amal)
-
-    await session.flush()
-
+        await session.commit()
+        await session.refresh(seed_user)
+    
+    # Создаём иконки для амалей
+    icons = await create_icons_amal(session)
+    print(f"Created {len(icons)} icons")
+    
+    # Создаём категории амалей
+    categories = await create_categories_amal(session)
+    print(f"Created {len(categories)} categories")
+    
+    # Создаём амали для тестового пользователя
+    amals = await create_amals_with_icons_and_categories(
+        session,
+        user_id=seed_user.id,
+        count=random.randint(5, 10),
+    )
+    print(f"Created {len(amals)} amals")
+    
+    # Создаём записи о выполнении амалей
+    completions_count = 0
     for amal in amals:
         for days_ago in range(random.randint(0, 5)):
             if random.random() > 0.4:
@@ -206,8 +106,22 @@ async def seed_amals(session: AsyncSession) -> None:
                 completion.amalId = amal.id
                 completion.userId = seed_user.id
                 session.add(completion)
-
+                completions_count += 1
+    
     await session.commit()
+    print(f"Created {completions_count} amal completions")
+
+
+async def seed(session: AsyncSession) -> None:
+    env = os.getenv("ENV", "dev")
+    if env == "prod":
+        raise RuntimeError("Seeding запрещен в prod окружении")
+
+    # Создаём sabil данные (страны, маршруты, рестораны, отели и т.д.)
+    await seed_sabil(session)
+    
+    # Создаём amal данные (иконки, категории, амали для тестового пользователя)
+    await seed_amals(session)
 
 
 async def seed_db() -> None:

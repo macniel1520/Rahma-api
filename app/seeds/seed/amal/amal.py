@@ -8,8 +8,8 @@ from app.db.models.amal import Amal
 from app.db.models.icon import Icon
 from app.db.models.amal_category import AmalCategory
 from app.seeds.factories import AmalFactory
-from app.seeds.seed.icon_amal import create_icons_amal
-from app.seeds.seed.amal_category import create_categories_amal
+from app.seeds.seed.amal.icon_amal import create_icons_amal
+from app.seeds.seed.amal.amal_category import create_categories_amal
 
 
 async def create_amal(

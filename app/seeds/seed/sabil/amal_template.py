@@ -58,42 +58,59 @@ async def create_amal_templates_for_route(
 
 
 AMAL_TEMPLATES_DATA = {
-    "Мекка — священный город": [
-        {"title": "Таваф вокруг Каабы", "reccuring_rule": ReccuringRule.ONCE},
+    # Саудовская Аравия
+    "Сафа и Марва": [
         {"title": "Сай между Сафа и Марва", "reccuring_rule": ReccuringRule.ONCE},
+        {"title": "Дуа на холмах", "reccuring_rule": ReccuringRule.ONCE},
+    ],
+    "Масджид аль-Харам": [
+        {"title": "Таваф вокруг Каабы", "reccuring_rule": ReccuringRule.ONCE},
         {"title": "Намаз у Макама Ибрахима", "reccuring_rule": ReccuringRule.ONCE},
         {"title": "Питьё воды Замзам", "reccuring_rule": ReccuringRule.DAILY},
         {"title": "Ночной намаз в Харам", "reccuring_rule": ReccuringRule.DAILY},
     ],
-    "Медина — город Пророка": [
-        {"title": "Намаз в мечети Пророка", "reccuring_rule": ReccuringRule.DAILY},
-        {"title": "Посещение Равда", "reccuring_rule": ReccuringRule.ONCE},
-        {"title": "Посещение кладбища Баки", "reccuring_rule": ReccuringRule.ONCE},
-        {"title": "Намаз в мечети Куба", "reccuring_rule": ReccuringRule.WEEKLY},
-    ],
-    "Гора Арафат": [
-        {"title": "Стояние на Арафате", "reccuring_rule": ReccuringRule.ONCE},
-        {"title": "Дуа на горе Рахма", "reccuring_rule": ReccuringRule.ONCE},
-    ],
-    "Мина — долина палаток": [
+    "Мина (долина палаток)": [
         {"title": "Побивание камнями Джамарат", "reccuring_rule": ReccuringRule.ONCE},
         {"title": "Ночёвка в Мине", "reccuring_rule": ReccuringRule.ONCE},
     ],
-    "Мешхед — город имама Резы": [
+    # Иран
+    "Кум — мавзолей Фатимы Масумы": [
+        {"title": "Зиярат мавзолея Фатимы Масумы", "reccuring_rule": ReccuringRule.ONCE},
+        {"title": "Намаз в святыне", "reccuring_rule": ReccuringRule.DAILY},
+    ],
+    "Мешхед — мавзолей имама Резы": [
         {"title": "Зиярат святыни имама Резы", "reccuring_rule": ReccuringRule.ONCE},
         {"title": "Намаз в святыне", "reccuring_rule": ReccuringRule.DAILY},
     ],
-    "Кербела — город имама Хусейна": [
+    "Шираз — Шах-Черах": [
+        {"title": "Зиярат мавзолея Шах-Черах", "reccuring_rule": ReccuringRule.ONCE},
+        {"title": "Намаз в святыне", "reccuring_rule": ReccuringRule.DAILY},
+    ],
+    # Ирак
+    "Кадимия (Багдад) — Аль-Кадимейн": [
+        {"title": "Зиярат мавзолея Аль-Кадимейн", "reccuring_rule": ReccuringRule.ONCE},
+        {"title": "Намаз в святыне", "reccuring_rule": ReccuringRule.DAILY},
+    ],
+    "Кербела — мавзолей имама Хусейна": [
         {"title": "Зиярат святыни имама Хусейна", "reccuring_rule": ReccuringRule.ONCE},
         {"title": "Зиярат святыни Аббаса", "reccuring_rule": ReccuringRule.ONCE},
     ],
-    "Наджаф — город имама Али": [
+    "Наджаф — мавзолей имама Али": [
         {"title": "Зиярат святыни имама Али", "reccuring_rule": ReccuringRule.ONCE},
         {"title": "Посещение кладбища Вади ас-Салам", "reccuring_rule": ReccuringRule.ONCE},
     ],
-    "Каир — город тысячи минаретов": [
-        {"title": "Намаз в мечети Аль-Хусейн", "reccuring_rule": ReccuringRule.ONCE},
+    # Египет
+    "Каир — мечеть и университет Аль-Азхар": [
         {"title": "Посещение мечети Аль-Азхар", "reccuring_rule": ReccuringRule.ONCE},
+        {"title": "Намаз в мечети", "reccuring_rule": ReccuringRule.DAILY},
+    ],
+    "Каир — мечеть Аль-Хусейна": [
+        {"title": "Намаз в мечети Аль-Хусейн", "reccuring_rule": ReccuringRule.ONCE},
+        {"title": "Зиярат святыни", "reccuring_rule": ReccuringRule.ONCE},
+    ],
+    "Каир — мечеть Сайида Зейнаб": [
+        {"title": "Посещение мечети Сайида Зейнаб", "reccuring_rule": ReccuringRule.ONCE},
+        {"title": "Намаз в мечети", "reccuring_rule": ReccuringRule.DAILY},
     ],
 }
 
