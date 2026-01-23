@@ -87,3 +87,21 @@ unauthorized_response = response_error(
     "user_not_authorized",
     "Authentication required.",
 )
+
+jes_timeout_response = response_error(
+    status.HTTP_504_GATEWAY_TIMEOUT,
+    "jes_timeout",
+    "JES timeout.",
+)
+
+jes_network_response = response_error(
+    status.HTTP_502_BAD_GATEWAY,
+    "jes_network",
+    "JES network error.",
+)
+
+jes_upstream_response = response_error(
+    status.HTTP_502_BAD_GATEWAY,
+    "jes_upstream",
+    "JES upstream error.",
+)

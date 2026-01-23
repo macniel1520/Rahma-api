@@ -68,6 +68,12 @@ class UserToken(BaseModel):
     lifetime_seconds: int
 
 
+class JES(BaseModel):
+    base_url: str
+    api_key: str
+    timeout_seconds: float
+
+
 class Settings(BaseSettings):
     s3: S3Settings
     db: DB
@@ -76,6 +82,7 @@ class Settings(BaseSettings):
     user_token: UserToken
     refresh_token: RefreshToken
     ai: AISettings
+    jes: JES
 
     model_config = SettingsConfigDict(
         env_prefix="API_",

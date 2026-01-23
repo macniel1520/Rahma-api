@@ -81,3 +81,24 @@ def resource_not_found_exc(resource_type: str, resource_id: str) -> HTTPExceptio
             "message": f"{resource_type} with id {resource_id} not found.",
         },
     )
+
+
+def jes_timeout_exc() -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+        detail={"error": "jes_timeout", "message": "JES timeout."},
+    )
+
+
+def jes_network_exc() -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_502_BAD_GATEWAY,
+        detail={"error": "jes_network", "message": "JES network error."},
+    )
+
+
+def jes_upstream_exc() -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_502_BAD_GATEWAY,
+        detail={"error": "jes_upstream", "message": "JES upstream error."},
+    )
