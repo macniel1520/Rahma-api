@@ -102,3 +102,13 @@ def jes_upstream_exc() -> HTTPException:
         status_code=status.HTTP_502_BAD_GATEWAY,
         detail={"error": "jes_upstream", "message": "JES upstream error."},
     )
+
+
+def foreign_key_not_found_exc() -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail={
+            "error": "amal_not_found",
+            "message": "Amal not found.",
+        },
+    )

@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.v1 import exceptions
 from app.api.v1.schemas.amal.amal_schema import AmalSyncRequest, AmalSyncResponse
 from app.db.cruds.amal_completion_repository import SqlAlchemyAmalCompletionRepository
 from app.db.cruds.amal_repository import SqlAlchemyAmalRepository
@@ -44,4 +46,9 @@ async def sync_amals(
     current_user: CurrentUser,
     service: AmalService = Depends(get_amal_service),
 ) -> AmalSyncResponse:
-    return await service.sync(user_id=current_user.id, request=request)
+    try:
+        return await service.sync(user_id=current_user.id, request=request)
+    except IntegrityError as e:
+        if "ForeignKeyViolationError" in str(e):
+            raise exceptions.foreign_key_not_found_exc()
+        raise
