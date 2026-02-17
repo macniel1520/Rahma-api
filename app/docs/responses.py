@@ -34,6 +34,12 @@ invalid_email_taken_response = response_error(
     "Email already registered.",
 )
 
+invalid_email_taken_not_verified_response = response_error(
+    status.HTTP_409_CONFLICT,
+    "email_taken_not_verified",
+    "Email already registered but not verified.",
+)
+
 verification_failed_response = response_error(
     status.HTTP_400_BAD_REQUEST,
     "verification_failed",

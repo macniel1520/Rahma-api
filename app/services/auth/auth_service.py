@@ -28,6 +28,10 @@ class EmailTaken(Exception):
     pass
 
 
+class EmailTakenNotVerified(Exception):
+    pass
+
+
 class InvalidCode(Exception):
     pass
 
@@ -74,6 +78,8 @@ async def register_user(
 ) -> User:
     existing = await get_by_email(session, email)
     if existing:
+        if not existing.is_verified:
+            raise EmailTakenNotVerified()
         raise EmailTaken()
 
     user = User(

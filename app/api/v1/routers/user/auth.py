@@ -14,6 +14,7 @@ from app.db.models.user import User
 from app.services.auth.auth_service import (
     CodeExpired,
     EmailTaken,
+    EmailTakenNotVerified,
     InvalidCode,
     PasswordMismatch,
     register_user,
@@ -24,7 +25,9 @@ from app.services.auth.auth_service import (
 )
 from app.api.v1 import exceptions
 from app.docs.responses import (
+    
     invalid_email_taken_response,
+    invalid_email_taken_not_verified_response,
     verification_failed_response,
     verification_expired_response,
     password_mismatch_response,
@@ -44,6 +47,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
     response_description="Пользователь успешно зарегистрирован",
     responses={
         **invalid_email_taken_response,  # noqa F405
+        **invalid_email_taken_not_verified_response,  # noqa F405
     },
 )
 async def register(
@@ -61,6 +65,8 @@ async def register(
             country=data.country,
             avatar_url=data.avatarUrl,
         )
+    except EmailTakenNotVerified:
+        raise exceptions.email_taken_not_verified_exc()
     except EmailTaken:
         raise exceptions.email_taken_exc()
 

@@ -73,6 +73,16 @@ def email_taken_exc() -> HTTPException:
     )
 
 
+def email_taken_not_verified_exc() -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_409_CONFLICT,
+        detail={
+            "error": "email_taken_not_verified",
+            "message": "Email already registered but not verified.",
+        },
+    )
+
+
 def resource_not_found_exc(resource_type: str, resource_id: str) -> HTTPException:
     return HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
