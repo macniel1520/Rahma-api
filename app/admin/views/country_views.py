@@ -34,6 +34,11 @@ class CountryAdmin(ModelView, model=Country):
         Country.updatedAt,
     ]
 
+    form_columns = [
+        Country.name,
+        Country.photoUrl,
+    ]
+
     column_labels = {
         Country.id: "ID",
         Country.name: "Name",

@@ -39,6 +39,12 @@ class AmalTemplateAdmin(ModelView, model=AmalTemplate):
         AmalTemplate.updatedAt,
     ]
 
+    form_columns = [
+        AmalTemplate.title,
+        AmalTemplate.reccuringRule,
+        AmalTemplate.route,
+    ]
+
     column_labels = {
         AmalTemplate.id: "ID",
         AmalTemplate.title: "Title",
@@ -82,9 +88,8 @@ class EmailVerificationAdmin(ModelView, model=EmailVerification):
         EmailVerification.updatedAt,
     ]
 
-    form_excluded_columns = [
-        EmailVerification.code,
-    ]
+    can_create = False
+    can_edit = False
 
     column_labels = {
         EmailVerification.id: "ID",
@@ -129,9 +134,8 @@ class PasswordResetCodeAdmin(ModelView, model=PasswordResetCode):
         PasswordResetCode.updatedAt,
     ]
 
-    form_excluded_columns = [
-        PasswordResetCode.code,
-    ]
+    can_create = False
+    can_edit = False
 
     column_labels = {
         PasswordResetCode.id: "ID",
@@ -176,9 +180,8 @@ class RefreshTokenAdmin(ModelView, model=RefreshToken):
         RefreshToken.updatedAt,
     ]
 
-    form_excluded_columns = [
-        RefreshToken.tokenHash,
-    ]
+    can_create = False
+    can_edit = False
 
     column_labels = {
         RefreshToken.id: "ID",

@@ -47,6 +47,16 @@ class AmalAdmin(ModelView, model=Amal):
         Amal.updatedAt,
     ]
 
+    form_columns = [
+        Amal.title,
+        Amal.date,
+        Amal.time,
+        Amal.reccuringRule,
+        Amal.category,
+        Amal.user,
+        Amal.icon,
+    ]
+
     column_labels = {
         Amal.id: "ID",
         Amal.title: "Title",
@@ -90,6 +100,10 @@ class AmalCategoryAdmin(ModelView, model=AmalCategory):
         AmalCategory.updatedAt,
     ]
 
+    form_columns = [
+        AmalCategory.name,
+    ]
+
     column_labels = {
         AmalCategory.id: "ID",
         AmalCategory.name: "Name",
@@ -130,6 +144,13 @@ class AmalCompletionAdmin(ModelView, model=AmalCompletion):
         AmalCompletion.completedAt,
         AmalCompletion.createdAt,
         AmalCompletion.updatedAt,
+    ]
+
+    form_columns = [
+        AmalCompletion.date,
+        AmalCompletion.completedAt,
+        AmalCompletion.amal,
+        AmalCompletion.user,
     ]
 
     column_labels = {

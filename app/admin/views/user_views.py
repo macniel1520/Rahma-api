@@ -50,6 +50,8 @@ class UserAdmin(ModelView, model=User):
         User.updatedAt,
     ]
 
+    can_create = False
+
     form_excluded_columns = [
         User.password,
         User.createdAt,

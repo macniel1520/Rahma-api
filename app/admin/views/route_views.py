@@ -42,6 +42,15 @@ class RouteAdmin(ModelView, model=Route):
         Route.updatedAt,
     ]
 
+    form_columns = [
+        Route.name,
+        Route.content,
+        Route.views,
+        Route.photoUrl,
+        Route.category,
+        Route.country,
+    ]
+
     column_labels = {
         Route.id: "ID",
         Route.name: "Name",

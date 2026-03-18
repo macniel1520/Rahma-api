@@ -33,6 +33,11 @@ class LocationAdmin(ModelView, model=Location):
         Location.updatedAt,
     ]
 
+    form_columns = [
+        Location.lat,
+        Location.lng,
+    ]
+
     column_labels = {
         Location.id: "ID",
         Location.lat: "Latitude",
@@ -82,6 +87,17 @@ class HotelAdmin(ModelView, model=Hotel):
         Hotel.name,
         Hotel.createdAt,
         Hotel.updatedAt,
+    ]
+
+    form_columns = [
+        Hotel.name,
+        Hotel.description,
+        Hotel.photoUrl,
+        Hotel.avgScore,
+        Hotel.scoreCount,
+        Hotel.avgPrice,
+        Hotel.location,
+        Hotel.route,
     ]
 
     column_labels = {
@@ -139,6 +155,17 @@ class RestaurantAdmin(ModelView, model=Restaurant):
         Restaurant.name,
         Restaurant.createdAt,
         Restaurant.updatedAt,
+    ]
+
+    form_columns = [
+        Restaurant.name,
+        Restaurant.description,
+        Restaurant.photoUrl,
+        Restaurant.costLevel,
+        Restaurant.isHaram,
+        Restaurant.avgScore,
+        Restaurant.scoreCount,
+        Restaurant.route,
     ]
 
     column_labels = {

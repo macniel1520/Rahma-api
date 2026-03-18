@@ -31,6 +31,10 @@ class IconAdmin(ModelView, model=Icon):
         Icon.updatedAt,
     ]
 
+    form_columns = [
+        Icon.url,
+    ]
+
     column_labels = {
         Icon.id: "ID",
         Icon.url: "URL",
@@ -71,6 +75,12 @@ class MessageAdmin(ModelView, model=Message):
         Message.updatedAt,
     ]
 
+    form_columns = [
+        Message.content,
+        Message.role,
+        Message.user,
+    ]
+
     column_labels = {
         Message.id: "ID",
         Message.content: "Content",
@@ -107,6 +117,11 @@ class RouteImageAdmin(ModelView, model=RouteImage):
     column_sortable_list = [
         RouteImage.createdAt,
         RouteImage.updatedAt,
+    ]
+
+    form_columns = [
+        RouteImage.url,
+        RouteImage.route,
     ]
 
     column_labels = {
