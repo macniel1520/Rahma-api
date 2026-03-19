@@ -29,3 +29,6 @@ class Hotel(Base, TimestampMixin):
         UUID_PK, ForeignKey("location.id", ondelete="SET NULL"), nullable=True
     )
     location: Mapped["Location"] = relationship("Location", back_populates="hotels")
+
+    def __str__(self) -> str:
+        return self.name

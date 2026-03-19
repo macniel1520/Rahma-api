@@ -19,3 +19,6 @@ class Country(Base, TimestampMixin):
     photoUrl: Mapped[str] = mapped_column(String(500), nullable=False)
 
     routes: Mapped[list["Route"]] = relationship("Route", back_populates="country")
+
+    def __str__(self) -> str:
+        return self.name

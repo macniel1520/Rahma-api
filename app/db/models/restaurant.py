@@ -27,3 +27,6 @@ class Restaurant(Base, TimestampMixin):
         UUID_PK, ForeignKey("route.id", ondelete="CASCADE"), nullable=False
     )
     route: Mapped["Route"] = relationship("Route", back_populates="restaurants")
+
+    def __str__(self) -> str:
+        return self.name

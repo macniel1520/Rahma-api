@@ -45,3 +45,6 @@ class Route(Base, TimestampMixin):
     amal_templates: Mapped[list["AmalTemplate"]] = relationship(
         "AmalTemplate", back_populates="route", cascade="all, delete-orphan"
     )
+
+    def __str__(self) -> str:
+        return self.name

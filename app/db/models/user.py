@@ -54,3 +54,6 @@ class User(Base, TimestampMixin):
     amal_completions: Mapped[list["AmalCompletion"]] = relationship(
         "AmalCompletion", back_populates="user"
     )
+
+    def __str__(self) -> str:
+        return self.name or self.email

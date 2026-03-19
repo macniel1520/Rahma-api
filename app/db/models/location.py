@@ -19,3 +19,6 @@ class Location(Base, TimestampMixin):
     lng: Mapped[str] = mapped_column(String(255), nullable=False)
 
     hotels: Mapped[list["Hotel"]] = relationship("Hotel", back_populates="location")
+
+    def __str__(self) -> str:
+        return f"{self.lat}, {self.lng}"
