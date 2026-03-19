@@ -13,7 +13,8 @@ class S3Settings(BaseModel):
 
     @property
     def url(self) -> str:
-        return f"https://{self.endpoint}/{self.bucket}"
+        scheme = "https" if self.secure else "http"
+        return f"{scheme}://{self.endpoint}/{self.bucket}"
 
 
 class AISettings(BaseModel):

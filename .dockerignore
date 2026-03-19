@@ -10,3 +10,5 @@ __pycache__/
 *.pyzw
 data
 .cursor
+admin-front/node_modules
+admin-front/dist

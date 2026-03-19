@@ -1,4 +1,6 @@
 import asyncio
+import mimetypes
+from pathlib import Path
 from io import BytesIO
 
 from minio import Minio
@@ -30,9 +32,10 @@ class AsyncMinioClient:
 
         log.info(f"Initializing S3 client with endpoint={endpoint}")
         parsed = urlparse(endpoint)
+        host = parsed.netloc or parsed.path
 
         self.client = Minio(
-            parsed.netloc,
+            host,
             access_key=access_key,
             secret_key=secret_key,
             secure=(parsed.scheme == "https") if parsed.scheme else secure,
@@ -57,15 +60,14 @@ class AsyncMinioClient:
 
     def _upload_file_sync(self, file_bytes: bytes, object_name: str) -> str:
         log.info(f"[_upload_file_sync] Uploading to bucket={self.bucket}")
-        if not self.client.bucket_exists(self.bucket):
-            raise RuntimeError(f"Bucket '{self.bucket}' не существует")
+        content_type = mimetypes.guess_type(Path(object_name).name)[0] or "application/octet-stream"
 
         self.client.put_object(
             self.bucket,
             object_name,
             data=BytesIO(file_bytes),
             length=len(file_bytes),
-            content_type="image/jpeg",
+            content_type=content_type,
         )
 
         log.info(f"[_upload_file_sync] Successfully uploaded object={object_name}")

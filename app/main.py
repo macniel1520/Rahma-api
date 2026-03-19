@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from app.admin.admin import create_admin_app
+from app.admin_front import setup_admin_front
 from app.core.error import register_exception_handlers
 from app.core.middleware import setup_middlewares
 from app.core.router import setup_routes
@@ -47,6 +48,7 @@ def create_app() -> FastAPI:
     setup_scalar(app)
     setup_elements(app)
     create_admin_app(app)
+    setup_admin_front(app)
 
     return app
 

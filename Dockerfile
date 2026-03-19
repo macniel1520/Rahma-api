@@ -1,3 +1,14 @@
+FROM node:24-bookworm-slim AS frontend-builder
+
+WORKDIR /frontend
+
+COPY admin-front/package*.json ./
+RUN npm install
+
+COPY admin-front ./
+RUN npm run build
+
+
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 
 ENV UV_COMPILE_BYTECODE=1 \
@@ -19,6 +30,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-install-project --no-dev
 
 COPY . /app
+COPY --from=frontend-builder /frontend/dist /app/admin-front/dist
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
